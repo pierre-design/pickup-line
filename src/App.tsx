@@ -112,7 +112,7 @@ function App() {
 
         {/* Section 1: Home / Call Control - Full viewport height */}
         <section className="h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-6 lg:px-8 py-12">
             {/* Header with Status Indicator */}
             <div className="w-full max-w-2xl mb-12">
               <div className="flex items-center justify-center gap-4 mb-4">
@@ -188,7 +188,7 @@ function App() {
 
         {/* Section 2: Performance Dashboard - Full viewport height */}
         <section className="h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex-1 flex flex-col px-4 md:px-6 lg:px-8 py-12">
             {/* Header */}
             <div className="w-full max-w-4xl mx-auto mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
