@@ -113,11 +113,11 @@ function App() {
 
         {/* Section 1: Home / Call Control - Full viewport height */}
         <section className="h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-8 lg:px-8 py-12">
+          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-8 lg:px-8 pt-12 pb-8">
             {/* Header with Status Indicator */}
-            <div className="w-full max-w-2xl mb-12">
+            <div className="w-full max-w-2xl mb-8">
               <div className="flex items-center justify-center gap-4 mb-4">
-                <h1 className="text-3xl sm:text-4xl font-bold text-white text-center">
+                <h1 className="text-3xl sm:text-4xl font-bold text-white text-left sm:text-center">
                   Pickup Line Coach
                 </h1>
                 
@@ -163,7 +163,7 @@ function App() {
             </p>
 
             {/* Quick Guide - Bottom Info Tile */}
-            <div className="w-full max-w-2xl mt-auto mb-8">
+            <div className="w-full max-w-2xl mt-auto mb-12">
               <div className="border-2 border-light-green rounded-lg p-6 bg-dark-green/30">
                 <h3 className="text-lg font-bold text-white mb-4 text-center">
                   Quick Guide
@@ -193,10 +193,10 @@ function App() {
 
         {/* Section 2: Performance Dashboard - Full viewport height */}
         <section className="h-screen bg-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col px-6 md:px-8 lg:px-8 py-12">
+          <div className="flex-1 flex flex-col px-6 md:px-8 lg:px-8 pt-16 pb-12">
             {/* Header */}
             <div className="w-full max-w-4xl mx-auto mb-8">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-left sm:text-center mb-4">
                 Your best opening lines
               </h2>
             </div>
