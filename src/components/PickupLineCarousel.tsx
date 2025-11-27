@@ -45,6 +45,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
       <div 
         ref={scrollContainerRef}
         className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 md:mx-0"
+        style={{ scrollPaddingLeft: '1.5rem', scrollPaddingRight: '1.5rem' }}
       >
         <div className="flex gap-4 pb-4 px-6 md:px-0">
           {sortedLines.map((line, index) => {
@@ -54,7 +55,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
             return (
               <div
                 key={line.id}
-                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start ${isLast ? 'pr-6 md:pr-0' : ''}`}
+                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start ${isLast ? 'mr-6 md:mr-0' : ''}`}
               >
                 <div className="bg-white rounded-2xl p-8 shadow-lg h-[200px] flex flex-col justify-center relative">
                   {/* Top Performing Badge */}
@@ -80,12 +81,15 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
         </div>
       </div>
       
-      {/* Scroll Indicator Dots - iOS style */}
+      {/* Scroll Indicator Dots - iOS style with smooth stretch animation */}
       <div className="flex justify-center gap-2 mt-4">
         {sortedLines.map((_, index) => (
           <div
             key={index}
-            className={`h-2 rounded-full transition-all duration-300 ${
+            style={{
+              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            }}
+            className={`h-2 rounded-full ${
               index === activeIndex 
                 ? 'w-6 bg-white' 
                 : 'w-2 bg-white/30'
