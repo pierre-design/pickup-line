@@ -6,6 +6,7 @@ import {
   CelebrationAnimation,
   PerformanceDashboard,
   PickupLineLibrary,
+  TranscriptionServiceInfo,
 } from './components';
 import type { CallControlPanelRef } from './components';
 import {
@@ -13,7 +14,7 @@ import {
   DefaultPerformanceAnalyzer,
   DefaultFeedbackGenerator,
 } from './services';
-import { LocalStorageDataRepository } from './infrastructure';
+import { LocalStorageDataRepository, TranscriptionServiceFactory } from './infrastructure';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import './App.css';
 
@@ -25,6 +26,7 @@ import './App.css';
 function App() {
   // Initialize services
   const [dataRepository] = useState(() => new LocalStorageDataRepository());
+  const [transcriptionService] = useState(() => TranscriptionServiceFactory.create());
   const [performanceAnalyzer] = useState(() => new DefaultPerformanceAnalyzer(dataRepository));
   const [feedbackGenerator] = useState(() => new DefaultFeedbackGenerator(performanceAnalyzer));
   const [sessionManager] = useState(
@@ -236,22 +238,29 @@ function App() {
                 <CallControlPanel
                   ref={callControlRef}
                   sessionManager={sessionManager}
+                  transcriptionService={transcriptionService}
                   onSessionStart={handleSessionStart}
                   onSessionEnd={handleSessionEnd}
                 />
               </div>
               
-              {/* Instructions */}
-              <div className="lg:col-span-1 max-w-md mx-auto lg:mx-0 p-4 sm:p-6 bg-blue-50 rounded-xl border border-blue-200">
-                <h3 className="text-base sm:text-lg font-semibold text-blue-900 mb-2">
-                  How to use
-                </h3>
-                <ol className="text-xs sm:text-sm text-blue-800 space-y-2 list-decimal list-inside">
-                  <li>Click "Start Call" to begin a new session</li>
-                  <li>Use one of the pickup lines from the library</li>
-                  <li>Click "End Call" when the conversation concludes</li>
-                  <li>Review your feedback and track your performance</li>
-                </ol>
+              {/* Instructions and Service Info */}
+              <div className="lg:col-span-1 max-w-md mx-auto lg:mx-0 space-y-4">
+                {/* Transcription Service Info */}
+                <TranscriptionServiceInfo />
+                
+                {/* Instructions */}
+                <div className="p-4 sm:p-6 bg-blue-50 rounded-xl border border-blue-200">
+                  <h3 className="text-base sm:text-lg font-semibold text-blue-900 mb-2">
+                    How to use
+                  </h3>
+                  <ol className="text-xs sm:text-sm text-blue-800 space-y-2 list-decimal list-inside">
+                    <li>Click "Start Call" to begin a new session</li>
+                    <li>Use one of the pickup lines from the library</li>
+                    <li>Click "End Call" when the conversation concludes</li>
+                    <li>Review your feedback and track your performance</li>
+                  </ol>
+                </div>
               </div>
             </div>
           )}

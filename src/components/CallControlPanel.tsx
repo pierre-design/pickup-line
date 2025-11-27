@@ -1,9 +1,11 @@
-import { useState, useImperativeHandle, forwardRef } from 'react';
+import { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import type { CallSession, PickupLine } from '../domain/types';
 import type { CallSessionManager } from '../services/interfaces';
+import type { AudioTranscriptionService } from '../infrastructure/interfaces';
 
 interface CallControlPanelProps {
   sessionManager: CallSessionManager;
+  transcriptionService: AudioTranscriptionService;
   onSessionStart?: (session: CallSession) => void;
   onSessionEnd?: () => void;
 }
@@ -20,11 +22,12 @@ export interface CallControlPanelRef {
  */
 export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanelProps>(
   function CallControlPanel(
-    { sessionManager, onSessionStart, onSessionEnd },
+    { sessionManager, transcriptionService, onSessionStart, onSessionEnd },
     ref
   ) {
     const [isSessionActive, setIsSessionActive] = useState(false);
     const [detectedPickupLine, setDetectedPickupLine] = useState<PickupLine | null>(null);
+    const [isListening, setIsListening] = useState(false);
 
     // Expose methods to parent components via ref
     useImperativeHandle(ref, () => ({
@@ -32,17 +35,59 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       isSessionActive: () => isSessionActive,
     }));
 
-  const handleStartCall = () => {
-    const session = sessionManager.startSession();
-    setIsSessionActive(true);
-    setDetectedPickupLine(null);
-    onSessionStart?.(session);
+    // Set up transcription callback
+    useEffect(() => {
+      transcriptionService.onTranscription((text, speaker) => {
+        console.log(`Transcription from ${speaker}:`, text);
+        // TODO: Process transcription (match pickup lines, detect outcomes)
+        // This will be handled by the session manager in a future update
+      });
+    }, [transcriptionService]);
+
+    // Clean up transcription service on unmount
+    useEffect(() => {
+      return () => {
+        if (isListening) {
+          transcriptionService.stopListening().catch(console.error);
+        }
+      };
+    }, [isListening, transcriptionService]);
+
+  const handleStartCall = async () => {
+    try {
+      const session = sessionManager.startSession();
+      setIsSessionActive(true);
+      setDetectedPickupLine(null);
+      
+      // Start listening for audio
+      await transcriptionService.startListening();
+      setIsListening(true);
+      
+      onSessionStart?.(session);
+    } catch (error) {
+      console.error('Failed to start call:', error);
+      setIsSessionActive(false);
+      alert('Failed to start audio transcription. Please check your microphone permissions.');
+    }
   };
 
-  const handleEndCall = () => {
-    setIsSessionActive(false);
-    setDetectedPickupLine(null);
-    onSessionEnd?.();
+  const handleEndCall = async () => {
+    try {
+      // Stop listening
+      if (isListening) {
+        await transcriptionService.stopListening();
+        setIsListening(false);
+      }
+      
+      setIsSessionActive(false);
+      setDetectedPickupLine(null);
+      onSessionEnd?.();
+    } catch (error) {
+      console.error('Failed to end call:', error);
+      setIsSessionActive(false);
+      setIsListening(false);
+      onSessionEnd?.();
+    }
   };
 
   return (

@@ -6,3 +6,4 @@ export { CelebrationAnimation } from './CelebrationAnimation';
 export { PerformanceDashboard } from './PerformanceDashboard';
 export { PickupLineLibrary } from './PickupLineLibrary';
 export { ErrorBoundary } from './ErrorBoundary';
+export { TranscriptionServiceInfo } from './TranscriptionServiceInfo';
