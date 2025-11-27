@@ -89,38 +89,47 @@ function PickupLineCard({ line }: PickupLineCardProps) {
       className="rounded-lg bg-dark-green/50 border border-[#006B3A] p-4 hover:bg-dark-green/70 transition-all duration-200" 
       role="listitem"
     >
-      <div className="flex items-start gap-4">
-        {/* Left side: 3/4 width - Pickup line text */}
-        <div className="flex-[3] min-w-0">
-          <p className="text-sm font-medium text-white leading-relaxed break-words">
-            {text}
-          </p>
+      {/* First Row: Stats - 3 columns */}
+      <div className="flex items-center justify-between gap-4 mb-3">
+        {/* Position */}
+        <div className="flex-1 text-center">
+          <div className="text-xs text-white/60 mb-1">Position</div>
+          <div className="text-lg font-bold text-white">#{position}</div>
         </div>
 
-        {/* Right side: 1/4 width - Stats */}
-        <div className="flex-1 flex flex-col items-end text-right">
-          <div className="text-sm font-bold text-white/60 mb-1">#{position}</div>
-          
+        {/* Success Rate */}
+        <div className="flex-1 text-center">
+          <div className="text-xs text-white/60 mb-1">Success</div>
           {hasData ? (
-            <>
-              <div className={`text-xl font-bold ${
-                successRatePercentage >= 80 ? 'text-medium-green' : 'text-pink'
-              }`}>
-                {successRatePercentage.toFixed(0)}%
-              </div>
-              <div className="text-xs text-white/60 mt-1">
-                {successfulUses}/{totalUses} success
-              </div>
-              <div className="text-xs text-white/60">
-                Used {totalUses}x
-              </div>
-            </>
-          ) : (
-            <div className="text-xs text-white/40 mt-2">
-              Not used yet
+            <div className={`text-lg font-bold ${
+              successRatePercentage >= 80 ? 'text-medium-green' : 'text-pink'
+            }`}>
+              {successRatePercentage.toFixed(0)}%
             </div>
+          ) : (
+            <div className="text-xs text-white/40">—</div>
           )}
         </div>
+
+        {/* Times Used */}
+        <div className="flex-1 text-center">
+          <div className="text-xs text-white/60 mb-1">Used</div>
+          {hasData ? (
+            <div className="text-lg font-bold text-white">{totalUses}x</div>
+          ) : (
+            <div className="text-xs text-white/40">—</div>
+          )}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-white/10 mb-3"></div>
+
+      {/* Second Row: Pickup Line Text */}
+      <div>
+        <p className="text-sm font-medium text-white leading-relaxed">
+          {text}
+        </p>
       </div>
     </div>
   );
