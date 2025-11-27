@@ -23,12 +23,12 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
-        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-        className="fixed bottom-0 left-0 right-0 bg-[#04411F] z-50 rounded-t-3xl shadow-2xl"
+        transition={{ type: 'tween', duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+        className="fixed bottom-0 left-4 right-4 bg-[#04411F] z-50 rounded-t-3xl shadow-2xl"
         role="alert"
         aria-live="polite"
       >
-        <div className="p-6 pb-safe">
+        <div className="p-6 pb-8">
           {/* Close button */}
           {onDismiss && (
             <button

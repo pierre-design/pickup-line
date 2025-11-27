@@ -21,9 +21,9 @@ export function OutcomeSelector({ show, onSelect, suggestedOutcome, confidence }
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-          className="absolute bottom-0 left-0 right-0 bg-[#04411F] rounded-t-3xl shadow-2xl"
+          className="absolute bottom-0 left-4 right-4 bg-[#04411F] rounded-t-3xl shadow-2xl"
         >
-          <div className="p-6 pb-safe">
+          <div className="p-6 pb-8">
             <h3 className="text-xl font-bold text-white mb-2 text-center">
               How did the call go?
             </h3>
