@@ -121,33 +121,28 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
         )}
       </div>
 
-      {/* Main Action Button */}
+      {/* Main Action Button - Sidekick Design System */}
       <button
         onClick={isSessionActive ? handleEndCall : handleStartCall}
         className={`
-          w-full py-5 px-6 rounded-2xl font-extrabold text-lg
-          transition-all duration-300 ease-out
-          focus:outline-none focus:ring-4 focus:ring-opacity-50
+          w-full py-4 px-6 rounded-lg font-bold text-lg
+          transition-all duration-200
+          focus:outline-none focus:ring-2 focus:ring-yellow
           min-h-[60px] touch-manipulation
-          relative overflow-hidden group
-          transform hover:scale-[1.02] active:scale-[0.98]
           ${
             isSessionActive
-              ? 'bg-gradient-to-r from-error to-red-600 hover:shadow-[0_0_30px_rgba(255,59,48,0.5)] text-white focus:ring-error shadow-hard'
-              : 'bg-gradient-to-r from-primary via-green-500 to-primary hover:shadow-[0_0_30px_rgba(0,149,59,0.6)] text-white focus:ring-primary shadow-glow-primary animate-gradient'
+              ? 'bg-pink text-white hover:bg-[#F99191]'
+              : 'bg-yellow text-black hover:bg-[#FFE44D]'
           }
+          disabled:opacity-50 disabled:cursor-not-allowed
         `}
-        style={{
-          backgroundSize: '200% 100%',
-        }}
         aria-label={isSessionActive ? 'End current call session' : 'Start new call session'}
         aria-pressed={isSessionActive}
       >
-        <span className="relative z-10 flex items-center justify-center gap-3">
+        <span className="flex items-center justify-center gap-3">
           <span className="text-2xl">{isSessionActive ? '⏹️' : '▶️'}</span>
           <span>{isSessionActive ? 'End Call' : 'Start Call'}</span>
         </span>
-        <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
       </button>
 
       {/* Detected Pickup Line */}

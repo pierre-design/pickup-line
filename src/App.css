@@ -2,45 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* SF Pro Font Weights */
-@layer base {
-  .font-extrabold {
-    font-weight: 800;
-  }
-  .font-bold {
-    font-weight: 700;
-  }
-  .font-semibold {
-    font-weight: 600;
-  }
-  .font-medium {
-    font-weight: 500;
-  }
+/* Global styles following Sidekick Design System */
+:root {
+  --darkest-green: #01150A;
+  --dark-green: #04411F;
+  --medium-green: #00953B;
+  --light-green: #8DCB89;
+  --yellow: #FFDD00;
+  --pink: #F87171;
 }
 
-/* Global styles */
-:root {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  
-  color-scheme: dark;
-  color: rgba(255, 255, 255, 0.87);
-  
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--darkest-green);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: white;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
-  color: rgba(255, 255, 255, 0.87);
-}
-
-/* Ensure all text is readable on dark background */
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
   color: #FFFFFF;
   font-weight: 700;
@@ -62,24 +44,24 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--light-green);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--medium-green);
 }
 
 /* Smooth transitions */
 * {
-  transition-property: color, background-color, border-color, box-shadow;
+  transition-property: color, background-color, border-color, box-shadow, transform;
   transition-duration: 200ms;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid #00953B;
+  outline: 2px solid var(--yellow);
   outline-offset: 2px;
 }
 
@@ -94,96 +76,43 @@ button:disabled {
   opacity: 0.5;
 }
 
-/* Card styles */
+/* Card styles following Sidekick Design System */
 .card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(4, 65, 31, 0.5);
+  border: 1px solid #006B3A;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  transition: all 200ms ease;
 }
 
 .card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
+  background: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* Glass morphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(4, 65, 31, 0.5);
   backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(141, 203, 137, 0.2);
 }
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #00953B 0%, #FFDD00 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Pulse animation for active states */
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 149, 59, 0.7);
+/* Animated gradient for buttons */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(0, 149, 59, 0);
-  }
-}
-
-.pulse-glow {
-  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Spotify-style progress bar */
-.progress-bar {
-  position: relative;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #00953B 0%, #FFDD00 100%);
-  border-radius: 2px;
-  transition: width 0.3s ease;
-}
-
-/* Hover lift effect */
-.hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-}
-
-/* Text shimmer effect */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
+    background-position: 100% 50%;
   }
   100% {
-    background-position: 1000px 0;
+    background-position: 0% 50%;
   }
 }
 
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.3) 50%,
-    rgba(255, 255, 255, 0.1) 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 2s infinite;
+.animate-gradient {
+  animation: gradient-shift 3s ease infinite;
 }
 
 /* Text contrast utilities */
@@ -203,19 +132,46 @@ button:disabled {
   color: rgba(255, 255, 255, 0.38);
 }
 
-/* Animated gradient for buttons */
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+/* Sidekick Design System Button Styles */
+.btn-primary {
+  background-color: var(--yellow);
+  color: black;
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 200ms;
 }
 
-.animate-gradient {
-  animation: gradient-shift 3s ease infinite;
+.btn-primary:hover:not(:disabled) {
+  background-color: #FFE44D;
+}
+
+.btn-secondary {
+  border: 2px solid var(--light-green);
+  color: var(--light-green);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  transition: all 200ms;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+}
+
+.btn-tertiary {
+  border: 2px solid white;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  transition: all 200ms;
+}
+
+.btn-tertiary:hover:not(:disabled) {
+  background-color: white;
+  color: var(--dark-green);
 }

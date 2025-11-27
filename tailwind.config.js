@@ -7,31 +7,28 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand colors
+        // Sidekick Design System Colors
+        'darkest-green': '#01150A',
+        'dark-green': '#04411F',
+        'medium-green': '#00953B',
+        'light-green': '#8DCB89',
+        'yellow': '#FFDD00',
+        'pink': '#F87171',
+        
+        // Semantic aliases
         primary: '#00953B',
         secondary: '#FFDD00',
-        
-        // Semantic colors
         success: '#00953B',
         warning: '#FFDD00',
-        error: '#FF3B30',
+        error: '#F87171',
         
-        // Neutral colors (dark theme inspired)
+        // Dark theme
         dark: {
-          900: '#0A0A0A',
-          800: '#121212',
-          700: '#1A1A1A',
-          600: '#282828',
-          500: '#3E3E3E',
-        },
-        
-        // Light theme
-        light: {
-          50: '#FAFAFA',
-          100: '#F5F5F5',
-          200: '#E5E5E5',
-          300: '#D4D4D4',
-          400: '#A3A3A3',
+          900: '#01150A',
+          800: '#04411F',
+          700: '#006B3A',
+          600: '#00953B',
+          500: '#8DCB89',
         },
       },
       spacing: {
@@ -48,19 +45,21 @@ export default {
         lg: '16px',
         xl: '20px',
         '2xl': '24px',
+        '3xl': '1.5rem',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', '"Fira Sans"', '"Droid Sans"', '"Helvetica Neue"', 'sans-serif'],
       },
       fontSize: {
-        xs: ['12px', { lineHeight: '16px' }],
-        sm: ['14px', { lineHeight: '20px' }],
-        base: ['16px', { lineHeight: '24px' }],
-        lg: ['18px', { lineHeight: '28px' }],
-        xl: ['20px', { lineHeight: '28px' }],
-        '2xl': ['24px', { lineHeight: '32px' }],
-        '3xl': ['30px', { lineHeight: '36px' }],
-        '4xl': ['36px', { lineHeight: '40px' }],
+        xs: ['0.75rem', { lineHeight: '1rem' }],
+        sm: ['0.875rem', { lineHeight: '1.25rem' }],
+        base: ['1rem', { lineHeight: '1.5rem' }],
+        lg: ['1.125rem', { lineHeight: '1.75rem' }],
+        xl: ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+        '8xl': ['6rem', { lineHeight: '1' }],
       },
       boxShadow: {
         'soft': '0 2px 8px rgba(0, 0, 0, 0.08)',

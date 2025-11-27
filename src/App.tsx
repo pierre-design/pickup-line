@@ -144,7 +144,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900">
+      <div className="min-h-screen bg-gradient-to-b from-dark-green to-darkest-green">
         {/* Skip to main content */}
         <a
           href="#main-content"
@@ -154,7 +154,7 @@ function App() {
         </a>
 
         {/* Header with glassmorphism */}
-        <header className="glass border-b border-white/10 sticky top-0 z-40 backdrop-blur-xl">
+        <header className="glass border-b border-light-green/20 sticky top-0 z-40 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="flex items-center justify-between">
               <div>
@@ -192,8 +192,8 @@ function App() {
           </div>
         </header>
 
-        {/* Navigation Tabs - Spotify style */}
-        <nav className="glass border-b border-white/10 sticky top-[88px] sm:top-[104px] z-30 backdrop-blur-xl" aria-label="Main navigation">
+        {/* Navigation Tabs - Sidekick style */}
+        <nav className="glass border-b border-light-green/20 sticky top-[88px] sm:top-[104px] z-30 backdrop-blur-xl" aria-label="Main navigation">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex gap-2 sm:gap-4" role="tablist">
               {[
