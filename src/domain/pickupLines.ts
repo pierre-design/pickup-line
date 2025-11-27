@@ -4,7 +4,7 @@ import type { PickupLine } from './types';
 export const PICKUP_LINES: PickupLine[] = [
   {
     id: 'pl-1',
-    text: "Hi, I noticed you've been looking at our product. Can I help answer any questions?",
+    text: "Hi, it's  YOUR_NAME from Dis-Chem Life. Thanks for requesting a call back. Is this a convenient time to talk about increasing your Better Rewards?",
     category: 'helpful',
   },
   {

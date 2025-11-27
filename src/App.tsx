@@ -112,10 +112,10 @@ function App() {
         </a>
 
         {/* Section 1: Home / Call Control - Full viewport height */}
-        <section className="min-h-screen h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always pt-safe">
+        <section className="min-h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always pt-safe">
           <div className="flex-1 flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 pb-20 md:pb-8 min-h-0">
             {/* Header with Status Indicator */}
-            <div className="w-full max-w-2xl mb-6 flex-shrink-0">
+            <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
                   Pickup Line Coach
@@ -142,12 +142,12 @@ function App() {
             </div>
 
             {/* Pickup Line Carousel */}
-            <div className="w-full max-w-2xl mb-6">
+            <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <PickupLineCarousel statistics={statistics} />
             </div>
 
             {/* Call Control Panel */}
-            <div className="w-full max-w-md mb-4">
+            <div className="w-full max-w-md mb-3 flex-shrink-0">
               <CallControlPanel
                 ref={callControlRef}
                 sessionManager={sessionManager}
@@ -158,12 +158,12 @@ function App() {
             </div>
 
             {/* Description below button */}
-            <p className="text-light-green text-center text-sm sm:text-base mb-6">
+            <p className="text-light-green text-center text-sm sm:text-base mb-4 flex-shrink-0">
               Improve how you start your calls
             </p>
 
             {/* Quick Guide - Bottom Info Tile */}
-            <div className="w-full max-w-2xl mt-auto mb-4">
+            <div className="w-full max-w-2xl mt-auto mb-4 flex-shrink-0">
               <div className="border-2 border-light-green rounded-lg p-6 bg-dark-green/30">
                 <h3 className="text-lg font-bold text-white mb-4 text-center">
                   Quick Guide

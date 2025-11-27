@@ -22,8 +22,6 @@ interface PickupLineWithStats {
  * Requirements: 7.1, 7.2, 7.3, 7.4
  */
 export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) {
-  const [sortBy, setSortBy] = useState<'successRate' | 'alphabetical'>('successRate');
-
   const allPickupLinesWithStats = useMemo(() => {
     // Create a map of statistics by pickup line ID
     const statsMap = new Map(statistics.map(stat => [stat.pickupLineId, stat]));
@@ -42,57 +40,23 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
       };
     });
 
-    // Sort based on selected option
-    if (sortBy === 'successRate') {
-      // Sort by success rate (descending), then by total uses (descending)
-      linesWithStats.sort((a, b) => {
-        if (b.successRate !== a.successRate) {
-          return b.successRate - a.successRate;
-        }
-        return b.totalUses - a.totalUses;
-      });
-    } else {
-      // Sort alphabetically
-      linesWithStats.sort((a, b) => a.text.localeCompare(b.text));
-    }
+    // Always sort by performance: success rate (descending), then by total uses (descending)
+    linesWithStats.sort((a, b) => {
+      if (b.successRate !== a.successRate) {
+        return b.successRate - a.successRate;
+      }
+      return b.totalUses - a.totalUses;
+    });
 
     // Update positions after sorting
     return linesWithStats.map((line, index) => ({
       ...line,
       position: index + 1,
     }));
-  }, [statistics, sortBy]);
+  }, [statistics]);
 
   return (
     <>
-      {/* Sort Controls - Part of sticky header */}
-      <div className="flex justify-center gap-3 mb-6" role="group" aria-label="Sort options">
-        <button
-          onClick={() => setSortBy('successRate')}
-          className={`px-6 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white min-h-[44px] ${
-            sortBy === 'successRate'
-              ? 'bg-white text-dark-green'
-              : 'border-2 border-white text-white hover:bg-white/10'
-          }`}
-          aria-label="Sort by top performers"
-          aria-pressed={sortBy === 'successRate'}
-        >
-          Top
-        </button>
-        <button
-          onClick={() => setSortBy('alphabetical')}
-          className={`px-6 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white min-h-[44px] ${
-            sortBy === 'alphabetical'
-              ? 'bg-white text-dark-green'
-              : 'border-2 border-white text-white hover:bg-white/10'
-          }`}
-          aria-label="Sort alphabetically"
-          aria-pressed={sortBy === 'alphabetical'}
-        >
-          Alphabetically
-        </button>
-      </div>
-
       {/* Pickup Lines List - Scrollable content */}
       <div 
         role="list" 
