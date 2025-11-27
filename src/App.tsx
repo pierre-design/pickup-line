@@ -112,10 +112,10 @@ function App() {
         </a>
 
         {/* Section 1: Home / Call Control - Full viewport height */}
-        <section className="min-h-screen h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-8 lg:px-8 pt-safe pt-8 pb-20 md:pb-8 min-h-0">
+        <section className="min-h-screen h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always pt-safe">
+          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-8 lg:px-8 py-8 pb-20 md:pb-8 min-h-0">
             {/* Header with Status Indicator */}
-            <div className="w-full max-w-2xl mb-4">
+            <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
                   Pickup Line Coach

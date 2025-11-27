@@ -95,11 +95,10 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
 
       {/* Pickup Lines List - Scrollable content */}
       <div 
-        className="px-6 md:px-8 lg:px-8" 
         role="list" 
         aria-label="Pickup line performance statistics"
       >
-        <div className="w-full max-w-4xl mx-auto space-y-3 pb-8">
+        <div className="space-y-3 pb-8">
           {allPickupLinesWithStats.map((line) => (
             <PickupLineCard
               key={line.id}
