@@ -80,7 +80,7 @@ interface PickupLineCardProps {
 }
 
 function PickupLineCard({ line }: PickupLineCardProps) {
-  const { text, position, totalUses, successRate, successfulUses } = line;
+  const { text, position, totalUses, successRate } = line;
   const successRatePercentage = successRate * 100;
   const hasData = totalUses > 0;
 
