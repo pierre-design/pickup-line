@@ -17,16 +17,7 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const itemHeight = 100;
 
-  const overallStats = useMemo(() => {
-    const totalCalls = statistics.reduce((sum, stat) => sum + stat.totalUses, 0);
-    const totalSuccessful = statistics.reduce((sum, stat) => sum + stat.successfulUses, 0);
-    const overallSuccessRate = totalCalls > 0 ? (totalSuccessful / totalCalls) * 100 : 0;
 
-    return {
-      totalCalls,
-      overallSuccessRate,
-    };
-  }, [statistics]);
 
   const sortedStatistics = useMemo(() => {
     const statsWithPickupLines = statistics.map(stat => {
@@ -83,76 +74,51 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
   }, [handleScroll]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Header */}
-      <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-6">Performance Dashboard</h2>
-
-      {/* Overall Statistics */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="glass p-6 rounded-2xl border border-white/10 hover-lift">
-          <p className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-2">
-            Total Calls
-          </p>
-          <p className="text-4xl font-extrabold text-white">{overallStats.totalCalls}</p>
-        </div>
-
-        <div className="glass p-6 rounded-2xl border border-primary/30 hover-lift">
-          <p className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-2">
-            Success Rate
-          </p>
-          <p className="text-4xl font-extrabold text-primary">
-            {overallStats.overallSuccessRate.toFixed(1)}%
-          </p>
-        </div>
-      </div>
-
+    <div className="w-full h-full flex flex-col">
       {/* Sort Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-        <h3 className="text-lg font-bold text-white">Pickup Line Performance</h3>
-        <div className="flex flex-wrap gap-2 w-full sm:w-auto" role="group" aria-label="Sort options">
-          <button
-            onClick={() => setSortBy('successRate')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] transform hover:scale-105 active:scale-95 ${
-              sortBy === 'successRate'
-                ? 'bg-gradient-to-r from-primary to-green-600 text-white shadow-glow-primary'
-                : 'glass text-white/80 hover:text-white hover:bg-white/10'
-            }`}
-            aria-label="Sort by success rate"
-            aria-pressed={sortBy === 'successRate'}
-          >
-            Success Rate
-          </button>
-          <button
-            onClick={() => setSortBy('totalUses')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] transform hover:scale-105 active:scale-95 ${
-              sortBy === 'totalUses'
-                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-[0_0_20px_rgba(59,130,246,0.5)]'
-                : 'glass text-white/80 hover:text-white hover:bg-white/10'
-            }`}
-            aria-label="Sort by total uses"
-            aria-pressed={sortBy === 'totalUses'}
-          >
-            Most Used
-          </button>
-          <button
-            onClick={() => setSortBy('alphabetical')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] transform hover:scale-105 active:scale-95 ${
-              sortBy === 'alphabetical'
-                ? 'bg-gradient-to-r from-secondary to-yellow-500 text-dark-900 shadow-[0_0_20px_rgba(255,221,0,0.5)]'
-                : 'glass text-white/80 hover:text-white hover:bg-white/10'
-            }`}
-            aria-label="Sort alphabetically"
-            aria-pressed={sortBy === 'alphabetical'}
-          >
-            A-Z
-          </button>
-        </div>
+      <div className="flex justify-center gap-2 mb-6" role="group" aria-label="Sort options">
+        <button
+          onClick={() => setSortBy('successRate')}
+          className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-yellow min-h-[44px] ${
+            sortBy === 'successRate'
+              ? 'bg-yellow text-black'
+              : 'border-2 border-light-green text-light-green hover:bg-light-green hover:text-dark-green'
+          }`}
+          aria-label="Sort by top performers"
+          aria-pressed={sortBy === 'successRate'}
+        >
+          Top
+        </button>
+        <button
+          onClick={() => setSortBy('totalUses')}
+          className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-yellow min-h-[44px] ${
+            sortBy === 'totalUses'
+              ? 'bg-yellow text-black'
+              : 'border-2 border-light-green text-light-green hover:bg-light-green hover:text-dark-green'
+          }`}
+          aria-label="Sort by most used"
+          aria-pressed={sortBy === 'totalUses'}
+        >
+          Most used
+        </button>
+        <button
+          onClick={() => setSortBy('alphabetical')}
+          className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-yellow min-h-[44px] ${
+            sortBy === 'alphabetical'
+              ? 'bg-yellow text-black'
+              : 'border-2 border-light-green text-light-green hover:bg-light-green hover:text-dark-green'
+          }`}
+          aria-label="Sort alphabetically"
+          aria-pressed={sortBy === 'alphabetical'}
+        >
+          A to Z
+        </button>
       </div>
 
       {/* Pickup Lines List */}
       <div 
         ref={scrollContainerRef}
-        className="max-h-[600px] overflow-y-auto pr-2" 
+        className="flex-1 overflow-y-auto pr-2" 
         role="list" 
         aria-label="Pickup line performance statistics"
       >
@@ -192,52 +158,42 @@ interface PickupLineStatCardProps {
 function PickupLineStatCard({ statistic }: PickupLineStatCardProps) {
   const { pickupLine, totalUses, successfulUses, successRate } = statistic;
 
-  const getSuccessRateColor = (rate: number) => {
-    if (rate >= 70) return 'from-primary to-green-600';
-    if (rate >= 50) return 'from-blue-500 to-blue-600';
-    if (rate >= 30) return 'from-secondary to-yellow-500';
-    return 'from-error to-red-600';
-  };
-
-  const getSuccessRateTextColor = (rate: number) => {
-    if (rate >= 70) return 'text-primary';
-    if (rate >= 50) return 'text-blue-400';
-    if (rate >= 30) return 'text-secondary';
-    return 'text-error';
-  };
-
   const successRatePercentage = successRate * 100;
 
   return (
     <div 
-      className="glass p-4 rounded-xl border border-white/10 hover:border-white/20 hover-lift transition-all" 
+      className="group rounded-lg bg-dark-green/50 border border-[#006B3A] p-6 hover:scale-[1.02] hover:bg-white hover:shadow-lg transition-all duration-200 cursor-pointer" 
       role="listitem"
     >
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white leading-relaxed break-words">
+          <p className="text-sm font-semibold text-white group-hover:text-dark-green leading-relaxed break-words transition-colors">
             {pickupLine?.text || 'Unknown pickup line'}
           </p>
           {pickupLine?.category && (
-            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-white/80 bg-white/10 rounded-md">
+            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-light-green bg-light-green/20 rounded-md group-hover:bg-light-green/30">
               {pickupLine.category}
             </span>
           )}
         </div>
 
         <div className="flex-shrink-0 text-right">
-          <p className={`text-2xl font-extrabold ${getSuccessRateTextColor(successRatePercentage)}`}>
+          <p className={`text-2xl font-extrabold transition-colors ${
+            successRatePercentage >= 80 ? 'text-medium-green' : 'text-pink'
+          } group-hover:text-dark-green`}>
             {successRatePercentage.toFixed(0)}%
           </p>
-          <p className="text-xs text-white/60 mt-1 whitespace-nowrap">
+          <p className="text-xs text-white/60 group-hover:text-dark-green/60 mt-1 whitespace-nowrap transition-colors">
             {successfulUses}/{totalUses} calls
           </p>
         </div>
       </div>
 
-      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-white/10 group-hover:bg-dark-green/20 rounded-full overflow-hidden transition-colors">
         <div
-          className={`h-full bg-gradient-to-r ${getSuccessRateColor(successRatePercentage)} transition-all duration-500`}
+          className={`h-full transition-all duration-500 ${
+            successRatePercentage >= 80 ? 'bg-medium-green' : 'bg-pink'
+          }`}
           style={{ width: `${successRatePercentage}%` }}
           role="progressbar"
           aria-valuenow={successRatePercentage}

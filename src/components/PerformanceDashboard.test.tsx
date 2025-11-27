@@ -25,25 +25,11 @@ describe('PerformanceDashboard', () => {
     },
   ];
 
-  it('should render the dashboard title', () => {
+  it('should render sort buttons', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
-    expect(screen.getByText('Performance Dashboard')).toBeInTheDocument();
-  });
-
-  it('should display total calls correctly', () => {
-    render(<PerformanceDashboard statistics={mockStatistics} />);
-    // Total: 10 + 15 + 5 = 30
-    expect(screen.getByText('30')).toBeInTheDocument();
-    expect(screen.getByText('Total Calls')).toBeInTheDocument();
-  });
-
-  it('should display overall success rate correctly', () => {
-    render(<PerformanceDashboard statistics={mockStatistics} />);
-    // Overall: (8 + 9 + 1) / (10 + 15 + 5) = 18/30 = 60%
-    expect(screen.getByText('60.0%')).toBeInTheDocument();
-    // "Success Rate" appears in the overall statistics section (changed from "Overall Success Rate" for mobile)
-    const successRateElements = screen.getAllByText('Success Rate');
-    expect(successRateElements.length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: /sort by top performers/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sort by most used/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sort alphabetically/i })).toBeInTheDocument();
   });
 
   it('should display empty state when no statistics provided', () => {
@@ -75,7 +61,7 @@ describe('PerformanceDashboard', () => {
   it('should change sort order when Most Used button is clicked', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    const mostUsedButton = screen.getByRole('button', { name: /sort by total uses/i });
+    const mostUsedButton = screen.getByRole('button', { name: /sort by most used/i });
     fireEvent.click(mostUsedButton);
     
     // After sorting by total uses, pl-2 (15 uses) should be first
@@ -102,18 +88,18 @@ describe('PerformanceDashboard', () => {
   it('should highlight active sort button', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    const successRateButton = screen.getByRole('button', { name: /sort by success rate/i });
-    const mostUsedButton = screen.getByRole('button', { name: /sort by total uses/i });
+    const topButton = screen.getByRole('button', { name: /sort by top performers/i });
+    const mostUsedButton = screen.getByRole('button', { name: /sort by most used/i });
     
-    // Success rate should be active by default
-    expect(successRateButton).toHaveClass('bg-gradient-to-r');
-    expect(mostUsedButton).not.toHaveClass('bg-gradient-to-r');
+    // Top performers should be active by default
+    expect(topButton).toHaveClass('bg-yellow');
+    expect(mostUsedButton).not.toHaveClass('bg-yellow');
     
     // Click Most Used
     fireEvent.click(mostUsedButton);
     
-    expect(mostUsedButton).toHaveClass('bg-gradient-to-r');
-    expect(successRateButton).not.toHaveClass('bg-primary');
+    expect(mostUsedButton).toHaveClass('bg-yellow');
+    expect(topButton).not.toHaveClass('bg-yellow');
   });
 
   it('should render progress bars with correct widths', () => {

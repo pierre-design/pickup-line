@@ -39,10 +39,11 @@ describe('CallControlPanel', () => {
     expect(button).toHaveTextContent('Start Call');
   });
 
-  it('should display Ready status when no session is active', () => {
+  it('should not display status text when no session is active', () => {
     render(<CallControlPanel sessionManager={mockSessionManager} transcriptionService={mockTranscriptionService} />);
 
-    expect(screen.getByText('Ready')).toBeInTheDocument();
+    // The component no longer displays "Ready" status text
+    expect(screen.getByRole('button', { name: /start new call session/i })).toBeInTheDocument();
   });
 
   it('should start a session when Start Call button is clicked', async () => {
@@ -65,7 +66,7 @@ describe('CallControlPanel', () => {
     expect(onSessionStart).toHaveBeenCalledWith(mockSession);
   });
 
-  it('should display Call Active status when session is active', async () => {
+  it('should change button text when session is active', async () => {
     render(<CallControlPanel sessionManager={mockSessionManager} transcriptionService={mockTranscriptionService} />);
 
     const button = screen.getByRole('button', { name: /start new call session/i });
@@ -73,7 +74,8 @@ describe('CallControlPanel', () => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByText('Live Call')).toBeInTheDocument();
+    // The component no longer displays "Live Call" status, just changes button
+    expect(screen.getByRole('button', { name: /end current call session/i })).toBeInTheDocument();
   });
 
   it('should change button to End Call when session is active', async () => {
@@ -115,7 +117,7 @@ describe('CallControlPanel', () => {
     expect(onSessionEnd).toHaveBeenCalledTimes(1);
   });
 
-  it('should return to Ready status after ending a session', async () => {
+  it('should return to Start Call button after ending a session', async () => {
     render(<CallControlPanel sessionManager={mockSessionManager} transcriptionService={mockTranscriptionService} />);
 
     // Start session
@@ -130,7 +132,8 @@ describe('CallControlPanel', () => {
       fireEvent.click(endButton);
     });
 
-    expect(screen.getByText('Ready')).toBeInTheDocument();
+    // Should show Start Call button again
+    expect(screen.getByRole('button', { name: /start new call session/i })).toBeInTheDocument();
   });
 
   it('should display detected pickup line when set via ref', () => {

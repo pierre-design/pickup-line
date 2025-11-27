@@ -10,12 +10,10 @@ describe('App', () => {
     expect(screen.getByText('Master your call opening techniques')).toBeInTheDocument();
   });
 
-  it('should render navigation tabs', () => {
+  it('should render performance section', () => {
     render(<App />);
     
-    expect(screen.getByText('Control')).toBeInTheDocument();
-    expect(screen.getByText('Performance')).toBeInTheDocument();
-    expect(screen.getByText('Library')).toBeInTheDocument();
+    expect(screen.getByText('Your best opening lines')).toBeInTheDocument();
   });
 
   it('should render the call control panel by default', () => {
