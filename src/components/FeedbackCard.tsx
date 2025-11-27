@@ -65,62 +65,6 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
 }
 
 /**
- * Checkmark icon for positive feedback
- */
-function CheckmarkIcon() {
-  return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <circle cx="16" cy="16" r="16" fill="white" fillOpacity="0.2" />
-      <path
-        d="M9 16L14 21L23 11"
-        stroke="white"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-/**
- * Lightbulb icon for negative feedback (constructive)
- */
-function LightbulbIcon() {
-  return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <circle cx="16" cy="16" r="16" fill="white" fillOpacity="0.2" />
-      <path
-        d="M16 8C13.2386 8 11 10.2386 11 13C11 14.8638 12.0518 16.4696 13.5 17.3542V20C13.5 20.8284 14.1716 21.5 15 21.5H17C17.8284 21.5 18.5 20.8284 18.5 20V17.3542C19.9482 16.4696 21 14.8638 21 13C21 10.2386 18.7614 8 16 8Z"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M14 23.5H18"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-/**
  * Close icon for dismiss button
  */
 function CloseIcon() {
