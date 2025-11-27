@@ -1,0 +1,76 @@
+/* App-specific styles */
+
+/* Smooth transitions for tab switching */
+main > div {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure proper spacing for fixed elements */
+body {
+  overflow-x: hidden;
+}
+
+/* Mobile-first responsive improvements */
+@media (max-width: 640px) {
+  /* Reduce padding on mobile for better space utilization */
+  .max-w-7xl {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Optimize scrollable areas for mobile */
+  [role="list"] {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Ensure proper spacing in tablet two-column layout */
+  .lg\:grid-cols-2 {
+    gap: 1.5rem;
+  }
+}
+
+/* Portrait orientation optimizations */
+@media (orientation: portrait) {
+  /* Maximize vertical space usage */
+  main {
+    min-height: calc(100vh - 200px);
+  }
+  
+  /* Optimize scrollable content areas */
+  [role="list"] {
+    max-height: 60vh;
+  }
+}
+
+/* Landscape orientation optimizations */
+@media (orientation: landscape) and (max-height: 600px) {
+  /* Reduce vertical padding in landscape on small screens */
+  header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  nav {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  main {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}

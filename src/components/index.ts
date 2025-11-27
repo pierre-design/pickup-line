@@ -1,0 +1,8 @@
+// UI layer - React components
+export { CallControlPanel } from './CallControlPanel';
+export type { CallControlPanelRef } from './CallControlPanel';
+export { FeedbackCard } from './FeedbackCard';
+export { CelebrationAnimation } from './CelebrationAnimation';
+export { PerformanceDashboard } from './PerformanceDashboard';
+export { PickupLineLibrary } from './PickupLineLibrary';
+export { ErrorBoundary } from './ErrorBoundary';
