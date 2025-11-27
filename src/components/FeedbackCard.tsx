@@ -20,24 +20,35 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
   return (
     <AnimatePresence>
       <motion.div
-        initial={{ y: 100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 100, opacity: 0 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] sm:w-[90%] max-w-md rounded-2xl shadow-lg p-6 bg-[#04411F] z-50"
+        initial={{ y: '100%' }}
+        animate={{ y: 0 }}
+        exit={{ y: '100%' }}
+        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+        className="fixed bottom-0 left-0 right-0 bg-[#04411F] z-50 rounded-t-3xl shadow-2xl"
         role="alert"
         aria-live="polite"
       >
-        <div className="flex items-start gap-3 sm:gap-4">
+        <div className="p-6 pb-safe">
+          {/* Close button */}
+          {onDismiss && (
+            <button
+              onClick={onDismiss}
+              className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+              aria-label="Dismiss feedback"
+            >
+              <CloseIcon />
+            </button>
+          )}
+
           {/* Content */}
-          <div className="flex-1 min-w-0">
-            <p className="font-bold text-base sm:text-lg mb-2 text-white">
+          <div className="pr-10">
+            <p className="font-bold text-lg text-white mb-4">
               {feedback.message}
             </p>
 
             {/* Suggested pickup line for negative feedback */}
             {!isPositive && feedback.suggestedPickupLine && (
-              <div className="mt-4 p-4 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20">
+              <div className="mt-4 p-4 bg-white/10 rounded-xl border border-white/20">
                 <p className="text-white text-sm font-bold mb-2">
                   💡 Try this instead:
                 </p>
@@ -47,17 +58,6 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
               </div>
             )}
           </div>
-
-          {/* Dismiss button */}
-          {onDismiss && (
-            <button
-              onClick={onDismiss}
-              className="flex-shrink-0 hover:scale-110 active:scale-95 transition-transform min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2 -mt-2 touch-manipulation rounded-full text-white/80 hover:text-white hover:bg-white/20"
-              aria-label="Dismiss feedback"
-            >
-              <CloseIcon />
-            </button>
-          )}
         </div>
       </motion.div>
     </AnimatePresence>
