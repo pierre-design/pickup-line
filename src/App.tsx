@@ -143,7 +143,7 @@ function App() {
             {/* Proposed Opening Line Tile */}
             <div className="w-full max-w-2xl mb-8">
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <p className="text-dark-green text-xl sm:text-2xl font-semibold leading-relaxed text-center">
+                <p className="text-black text-xl sm:text-2xl font-semibold leading-relaxed text-center">
                   "Hi, I noticed you've been looking at our product. Can I help answer any questions?"
                 </p>
               </div>
