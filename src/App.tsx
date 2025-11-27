@@ -112,7 +112,7 @@ function App() {
 
         {/* Section 1: Home / Call Control - Full viewport height */}
         <section className="h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-6 lg:px-8 py-12">
+          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-8 lg:px-8 py-12">
             {/* Header with Status Indicator */}
             <div className="w-full max-w-2xl mb-12">
               <div className="flex items-center justify-center gap-4 mb-4">
@@ -143,7 +143,7 @@ function App() {
             {/* Proposed Opening Line Tile */}
             <div className="w-full max-w-2xl mb-8">
               <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <p className="text-black text-xl sm:text-2xl font-semibold leading-relaxed text-center">
+                <p className="text-xl sm:text-2xl font-semibold leading-relaxed text-center" style={{ color: '#000000' }}>
                   "Hi, I noticed you've been looking at our product. Can I help answer any questions?"
                 </p>
               </div>
@@ -195,8 +195,8 @@ function App() {
         </section>
 
         {/* Section 2: Performance Dashboard - Full viewport height */}
-        <section className="h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col px-4 md:px-6 lg:px-8 py-12">
+        <section className="h-screen bg-[#01150A] flex flex-col snap-start snap-always">
+          <div className="flex-1 flex flex-col px-6 md:px-8 lg:px-8 py-12">
             {/* Header */}
             <div className="w-full max-w-4xl mx-auto mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
