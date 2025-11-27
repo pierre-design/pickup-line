@@ -7,13 +7,13 @@ describe('App', () => {
     render(<App />);
     
     expect(screen.getByText('Pickup Line Coach')).toBeInTheDocument();
-    expect(screen.getByText('Improve your call opening techniques with real-time feedback')).toBeInTheDocument();
+    expect(screen.getByText('Master your call opening techniques')).toBeInTheDocument();
   });
 
   it('should render navigation tabs', () => {
     render(<App />);
     
-    expect(screen.getByText('Call Control')).toBeInTheDocument();
+    expect(screen.getByText('Control')).toBeInTheDocument();
     expect(screen.getByText('Performance')).toBeInTheDocument();
     expect(screen.getByText('Library')).toBeInTheDocument();
   });
@@ -22,7 +22,7 @@ describe('App', () => {
     render(<App />);
     
     expect(screen.getByText('Start Call')).toBeInTheDocument();
-    expect(screen.getByText('How to use')).toBeInTheDocument();
+    expect(screen.getByText('Quick Guide')).toBeInTheDocument();
   });
 
   it('should initialize without errors', () => {

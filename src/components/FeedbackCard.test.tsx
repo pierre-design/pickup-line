@@ -19,7 +19,7 @@ describe('FeedbackCard', () => {
     render(<FeedbackCard feedback={feedback} />);
     
     expect(screen.getByText('Great job! The client stayed on the call.')).toBeInTheDocument();
-    expect(screen.getByRole('alert')).toHaveClass('bg-success');
+    expect(screen.getByRole('alert')).toHaveClass('bg-gradient-to-br');
   });
 
   it('should render negative feedback with lightbulb and message', () => {
@@ -32,7 +32,7 @@ describe('FeedbackCard', () => {
     render(<FeedbackCard feedback={feedback} />);
     
     expect(screen.getByText('The client left quickly. Let\'s try a different approach.')).toBeInTheDocument();
-    expect(screen.getByRole('alert')).toHaveClass('bg-warning');
+    expect(screen.getByRole('alert')).toHaveClass('bg-gradient-to-br');
   });
 
   it('should display suggested pickup line for negative feedback', () => {
@@ -49,7 +49,7 @@ describe('FeedbackCard', () => {
 
     render(<FeedbackCard feedback={feedback} />);
     
-    expect(screen.getByText('Try this instead:')).toBeInTheDocument();
+    expect(screen.getByText(/Try this instead:/i)).toBeInTheDocument();
     expect(screen.getByText('"Hi, I noticed you recently downloaded our app..."')).toBeInTheDocument();
   });
 

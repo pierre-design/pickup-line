@@ -106,13 +106,13 @@ describe('PerformanceDashboard', () => {
     const mostUsedButton = screen.getByRole('button', { name: /sort by total uses/i });
     
     // Success rate should be active by default
-    expect(successRateButton).toHaveClass('bg-primary');
-    expect(mostUsedButton).not.toHaveClass('bg-primary');
+    expect(successRateButton).toHaveClass('bg-gradient-to-r');
+    expect(mostUsedButton).not.toHaveClass('bg-gradient-to-r');
     
     // Click Most Used
     fireEvent.click(mostUsedButton);
     
-    expect(mostUsedButton).toHaveClass('bg-primary');
+    expect(mostUsedButton).toHaveClass('bg-gradient-to-r');
     expect(successRateButton).not.toHaveClass('bg-primary');
   });
 

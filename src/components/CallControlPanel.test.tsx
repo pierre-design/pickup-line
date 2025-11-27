@@ -73,7 +73,7 @@ describe('CallControlPanel', () => {
       fireEvent.click(button);
     });
 
-    expect(screen.getByText('Call Active')).toBeInTheDocument();
+    expect(screen.getByText('Live Call')).toBeInTheDocument();
   });
 
   it('should change button to End Call when session is active', async () => {
