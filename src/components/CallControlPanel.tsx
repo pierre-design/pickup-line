@@ -89,7 +89,7 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       <button
         onClick={isSessionActive ? handleEndCall : handleStartCall}
         className={`
-          w-full py-4 px-6 rounded-2xl font-bold text-lg
+          w-full py-4 px-6 rounded-2xl font-extrabold text-lg
           transition-all duration-200
           focus:outline-none focus:ring-2 focus:ring-yellow
           min-h-[60px] touch-manipulation
