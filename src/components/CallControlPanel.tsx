@@ -125,17 +125,21 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       <button
         onClick={isSessionActive ? handleEndCall : handleStartCall}
         className={`
-          w-full py-5 px-6 rounded-xl font-bold text-lg
+          w-full py-5 px-6 rounded-2xl font-extrabold text-lg
           transition-all duration-300 ease-out
           focus:outline-none focus:ring-4 focus:ring-opacity-50
           min-h-[60px] touch-manipulation
           relative overflow-hidden group
+          transform hover:scale-[1.02] active:scale-[0.98]
           ${
             isSessionActive
-              ? 'bg-gradient-to-r from-error to-red-600 hover:from-red-600 hover:to-error text-white focus:ring-error shadow-hard'
-              : 'bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white focus:ring-primary shadow-glow-primary'
+              ? 'bg-gradient-to-r from-error to-red-600 hover:shadow-[0_0_30px_rgba(255,59,48,0.5)] text-white focus:ring-error shadow-hard'
+              : 'bg-gradient-to-r from-primary via-green-500 to-primary hover:shadow-[0_0_30px_rgba(0,149,59,0.6)] text-white focus:ring-primary shadow-glow-primary animate-gradient'
           }
         `}
+        style={{
+          backgroundSize: '200% 100%',
+        }}
         aria-label={isSessionActive ? 'End current call session' : 'Start new call session'}
         aria-pressed={isSessionActive}
       >

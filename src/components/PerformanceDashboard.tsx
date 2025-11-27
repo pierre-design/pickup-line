@@ -112,9 +112,9 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
         <div className="flex flex-wrap gap-2 w-full sm:w-auto" role="group" aria-label="Sort options">
           <button
             onClick={() => setSortBy('successRate')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] ${
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] transform hover:scale-105 active:scale-95 ${
               sortBy === 'successRate'
-                ? 'bg-primary text-white shadow-glow-primary'
+                ? 'bg-gradient-to-r from-primary to-green-600 text-white shadow-glow-primary'
                 : 'glass text-white/80 hover:text-white hover:bg-white/10'
             }`}
             aria-label="Sort by success rate"
@@ -124,9 +124,9 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
           </button>
           <button
             onClick={() => setSortBy('totalUses')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] ${
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] transform hover:scale-105 active:scale-95 ${
               sortBy === 'totalUses'
-                ? 'bg-primary text-white shadow-glow-primary'
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-[0_0_20px_rgba(59,130,246,0.5)]'
                 : 'glass text-white/80 hover:text-white hover:bg-white/10'
             }`}
             aria-label="Sort by total uses"
@@ -136,9 +136,9 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
           </button>
           <button
             onClick={() => setSortBy('alphabetical')}
-            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] ${
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] transform hover:scale-105 active:scale-95 ${
               sortBy === 'alphabetical'
-                ? 'bg-primary text-white shadow-glow-primary'
+                ? 'bg-gradient-to-r from-secondary to-yellow-500 text-dark-900 shadow-[0_0_20px_rgba(255,221,0,0.5)]'
                 : 'glass text-white/80 hover:text-white hover:bg-white/10'
             }`}
             aria-label="Sort alphabetically"

@@ -24,8 +24,10 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] sm:w-[90%] max-w-md rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 ${
-          isPositive ? 'bg-success' : 'bg-warning'
+        className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] sm:w-[90%] max-w-md rounded-2xl shadow-hard p-6 ${
+          isPositive 
+            ? 'bg-gradient-to-br from-primary to-green-600 shadow-glow-primary' 
+            : 'bg-gradient-to-br from-secondary to-yellow-500 shadow-[0_0_30px_rgba(255,221,0,0.4)]'
         }`}
         role="alert"
         aria-live="polite"
@@ -42,17 +44,17 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-white font-semibold text-sm sm:text-base mb-2">
+            <p className={`font-bold text-base sm:text-lg mb-2 ${isPositive ? 'text-white' : 'text-dark-900'}`}>
               {feedback.message}
             </p>
 
             {/* Suggested pickup line for negative feedback */}
             {!isPositive && feedback.suggestedPickupLine && (
-              <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-white/20 rounded-md backdrop-blur-sm">
-                <p className="text-white/90 text-xs sm:text-sm font-medium mb-1 sm:mb-2">
-                  Try this instead:
+              <div className="mt-4 p-4 bg-dark-900/20 rounded-xl backdrop-blur-sm border border-dark-900/30">
+                <p className="text-dark-900 text-sm font-bold mb-2">
+                  💡 Try this instead:
                 </p>
-                <p className="text-white text-sm sm:text-base font-semibold break-words">
+                <p className="text-dark-900 text-sm font-semibold break-words">
                   "{feedback.suggestedPickupLine.text}"
                 </p>
               </div>
@@ -63,7 +65,9 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
           {onDismiss && (
             <button
               onClick={onDismiss}
-              className="flex-shrink-0 text-white/80 hover:text-white active:text-white transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2 -mt-2 touch-manipulation"
+              className={`flex-shrink-0 hover:scale-110 active:scale-95 transition-transform min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2 -mt-2 touch-manipulation rounded-full ${
+                isPositive ? 'text-white/80 hover:text-white hover:bg-white/20' : 'text-dark-900/80 hover:text-dark-900 hover:bg-dark-900/20'
+              }`}
               aria-label="Dismiss feedback"
             >
               <CloseIcon />

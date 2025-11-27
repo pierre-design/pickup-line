@@ -202,3 +202,47 @@ button:disabled {
 .text-contrast-disabled {
   color: rgba(255, 255, 255, 0.38);
 }
+
+/* Animated gradient for buttons */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Button hover effects */
+.btn-primary {
+  @apply bg-gradient-to-r from-primary via-green-500 to-primary;
+  @apply text-white font-extrabold rounded-2xl;
+  @apply shadow-glow-primary hover:shadow-[0_0_30px_rgba(0,149,59,0.6)];
+  @apply transform hover:scale-[1.02] active:scale-[0.98];
+  @apply transition-all duration-300;
+  background-size: 200% 100%;
+}
+
+.btn-secondary {
+  @apply bg-gradient-to-r from-secondary via-yellow-400 to-secondary;
+  @apply text-dark-900 font-extrabold rounded-2xl;
+  @apply shadow-[0_0_20px_rgba(255,221,0,0.4)] hover:shadow-[0_0_30px_rgba(255,221,0,0.6)];
+  @apply transform hover:scale-[1.02] active:scale-[0.98]];
+  @apply transition-all duration-300;
+  background-size: 200% 100%;
+}
+
+.btn-danger {
+  @apply bg-gradient-to-r from-error to-red-600;
+  @apply text-white font-extrabold rounded-2xl;
+  @apply shadow-hard hover:shadow-[0_0_30px_rgba(255,59,48,0.5)];
+  @apply transform hover:scale-[1.02] active:scale-[0.98]];
+  @apply transition-all duration-300;
+}
