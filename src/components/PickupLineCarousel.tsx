@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import { PICKUP_LINES } from '../domain/pickupLines';
 
 interface PickupLineCarouselProps {
@@ -5,6 +6,9 @@ interface PickupLineCarouselProps {
 }
 
 export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   // Find the top performing pickup line
   const topPerformerId = statistics.length > 0
     ? statistics.reduce((top, current) => 
@@ -19,18 +23,38 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
     return 0;
   });
 
+  // Track scroll position to update active dot
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const itemWidth = container.scrollWidth / sortedLines.length;
+      const index = Math.round(scrollLeft / itemWidth);
+      setActiveIndex(Math.min(index, sortedLines.length - 1));
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [sortedLines.length]);
+
   return (
-    <div className="w-full max-w-2xl -mx-6 md:mx-0">
+    <div className="w-full max-w-2xl">
       {/* Horizontal scrollable container */}
-      <div className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide">
+      <div 
+        ref={scrollContainerRef}
+        className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 md:mx-0"
+      >
         <div className="flex gap-4 pb-4 px-6 md:px-0">
-          {sortedLines.map((line) => {
+          {sortedLines.map((line, index) => {
             const isTopPerformer = line.id === topPerformerId;
+            const isLast = index === sortedLines.length - 1;
             
             return (
               <div
                 key={line.id}
-                className="flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-center"
+                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start ${isLast ? 'pr-6 md:pr-0' : ''}`}
               >
                 <div className="bg-white rounded-2xl p-8 shadow-lg h-[200px] flex flex-col justify-center relative">
                   {/* Top Performing Badge */}
@@ -56,12 +80,16 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
         </div>
       </div>
       
-      {/* Scroll Indicator Dots */}
-      <div className="flex justify-center gap-2 mt-4 px-6 md:px-0">
+      {/* Scroll Indicator Dots - iOS style */}
+      <div className="flex justify-center gap-2 mt-4">
         {sortedLines.map((_, index) => (
           <div
             key={index}
-            className="w-2 h-2 rounded-full bg-white/30"
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === activeIndex 
+                ? 'w-6 bg-white' 
+                : 'w-2 bg-white/30'
+            }`}
           />
         ))}
       </div>
