@@ -5,6 +5,7 @@ import {
   FeedbackCard,
   CelebrationAnimation,
   PerformanceDashboard,
+  PickupLineCarousel,
 } from './components';
 import type { CallControlPanelRef } from './components';
 import {
@@ -140,13 +141,9 @@ function App() {
               </div>
             </div>
 
-            {/* Proposed Opening Line Tile */}
+            {/* Pickup Line Carousel */}
             <div className="w-full max-w-2xl mb-8">
-              <div className="bg-white rounded-2xl p-8 shadow-lg">
-                <p className="text-xl sm:text-2xl font-semibold leading-relaxed text-center" style={{ color: '#000000' }}>
-                  "Hi, I noticed you've been looking at our product. Can I help answer any questions?"
-                </p>
-              </div>
+              <PickupLineCarousel statistics={statistics} />
             </div>
 
             {/* Call Control Panel */}
@@ -162,13 +159,13 @@ function App() {
 
             {/* Description below button */}
             <p className="text-light-green text-center text-sm sm:text-base mb-8">
-              Master your call opening techniques
+              Improve how you start your calls
             </p>
 
             {/* Quick Guide - Bottom Info Tile */}
             <div className="w-full max-w-2xl mt-auto mb-8">
               <div className="border-2 border-light-green rounded-lg p-6 bg-dark-green/30">
-                <h3 className="text-lg font-bold text-white mb-4">
+                <h3 className="text-lg font-bold text-white mb-4 text-center">
                   Quick Guide
                 </h3>
                 <ol className="text-sm text-white/80 space-y-3">

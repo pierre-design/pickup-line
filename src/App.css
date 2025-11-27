@@ -107,6 +107,16 @@ button:disabled {
   border: 1px solid rgba(141, 203, 137, 0.2);
 }
 
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Animated gradient for buttons */
 @keyframes gradient-shift {
   0% {

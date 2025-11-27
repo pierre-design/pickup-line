@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useRef, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import type { PickupLineStatistics } from '../domain/types';
 import { PICKUP_LINES } from '../domain/pickupLines';
 
@@ -6,69 +6,62 @@ interface PerformanceDashboardProps {
   statistics: PickupLineStatistics[];
 }
 
+interface PickupLineWithStats {
+  id: string;
+  text: string;
+  category?: string;
+  position: number;
+  totalUses: number;
+  successRate: number;
+  successfulUses: number;
+}
+
 /**
  * Performance Dashboard Component
- * Displays aggregate performance statistics and individual pickup line performance
+ * Displays ALL pickup lines with their performance statistics
  * Requirements: 7.1, 7.2, 7.3, 7.4
  */
 export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) {
-  const [sortBy, setSortBy] = useState<'successRate' | 'alphabetical'>('alphabetical');
-  const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 });
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const itemHeight = 100;
+  const [sortBy, setSortBy] = useState<'successRate' | 'alphabetical'>('successRate');
 
+  const allPickupLinesWithStats = useMemo(() => {
+    // Create a map of statistics by pickup line ID
+    const statsMap = new Map(statistics.map(stat => [stat.pickupLineId, stat]));
 
-
-  const sortedStatistics = useMemo(() => {
-    const statsWithPickupLines = statistics.map(stat => {
-      const pickupLine = PICKUP_LINES.find(pl => pl.id === stat.pickupLineId);
+    // Map all pickup lines with their stats (or defaults if no stats)
+    const linesWithStats: PickupLineWithStats[] = PICKUP_LINES.map((line, index) => {
+      const stat = statsMap.get(line.id);
       return {
-        ...stat,
-        pickupLine,
+        id: line.id,
+        text: line.text,
+        category: line.category,
+        position: index + 1,
+        totalUses: stat?.totalUses || 0,
+        successRate: stat?.successRate || 0,
+        successfulUses: stat?.successfulUses || 0,
       };
     });
 
-    const sorted = [...statsWithPickupLines];
-
-    switch (sortBy) {
-      case 'successRate':
-        sorted.sort((a, b) => b.successRate - a.successRate);
-        break;
-      case 'alphabetical':
-        sorted.sort((a, b) => {
-          const textA = a.pickupLine?.text || '';
-          const textB = b.pickupLine?.text || '';
-          return textA.localeCompare(textB);
-        });
-        break;
+    // Sort based on selected option
+    if (sortBy === 'successRate') {
+      // Sort by success rate (descending), then by total uses (descending)
+      linesWithStats.sort((a, b) => {
+        if (b.successRate !== a.successRate) {
+          return b.successRate - a.successRate;
+        }
+        return b.totalUses - a.totalUses;
+      });
+    } else {
+      // Sort alphabetically
+      linesWithStats.sort((a, b) => a.text.localeCompare(b.text));
     }
 
-    return sorted;
+    // Update positions after sorting
+    return linesWithStats.map((line, index) => ({
+      ...line,
+      position: index + 1,
+    }));
   }, [statistics, sortBy]);
-
-  const visibleItems = useMemo(() => {
-    return sortedStatistics.slice(visibleRange.start, visibleRange.end);
-  }, [sortedStatistics, visibleRange]);
-
-  const handleScroll = useCallback(() => {
-    if (!scrollContainerRef.current) return;
-
-    const scrollTop = scrollContainerRef.current.scrollTop;
-    const containerHeight = scrollContainerRef.current.clientHeight;
-
-    const start = Math.floor(scrollTop / itemHeight);
-    const end = Math.ceil((scrollTop + containerHeight) / itemHeight) + 5;
-
-    setVisibleRange({ start: Math.max(0, start), end: Math.min(sortedStatistics.length, end) });
-  }, [sortedStatistics.length, itemHeight]);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, [handleScroll]);
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -102,95 +95,69 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
 
       {/* Pickup Lines List */}
       <div 
-        ref={scrollContainerRef}
         className="flex-1 overflow-y-auto pr-2" 
         role="list" 
         aria-label="Pickup line performance statistics"
       >
-        {sortedStatistics.length === 0 ? (
-          <div className="glass p-12 rounded-2xl text-center border border-white/10" role="status">
-            <p className="text-lg font-bold text-white mb-2">No data yet</p>
-            <p className="text-sm text-white/60">Start making calls to see your performance statistics</p>
-          </div>
-        ) : (
-          <div style={{ height: `${sortedStatistics.length * itemHeight}px`, position: 'relative' }}>
-            <div 
-              className="space-y-3"
-              style={{ 
-                transform: `translateY(${visibleRange.start * itemHeight}px)`,
-                position: 'absolute',
-                width: '100%'
-              }}
-            >
-              {visibleItems.map((stat) => (
-                <PickupLineStatCard
-                  key={stat.pickupLineId}
-                  statistic={stat}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        <div className="space-y-3">
+          {allPickupLinesWithStats.map((line) => (
+            <PickupLineCard
+              key={line.id}
+              line={line}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 }
 
-interface PickupLineStatCardProps {
-  statistic: PickupLineStatistics & { pickupLine?: { id: string; text: string; category?: string } };
+interface PickupLineCardProps {
+  line: PickupLineWithStats;
 }
 
-function PickupLineStatCard({ statistic }: PickupLineStatCardProps) {
-  const { pickupLine, totalUses, successfulUses, successRate } = statistic;
-
+function PickupLineCard({ line }: PickupLineCardProps) {
+  const { text, position, totalUses, successRate, successfulUses } = line;
   const successRatePercentage = successRate * 100;
+  const hasData = totalUses > 0;
 
   return (
     <div 
-      className="group rounded-lg bg-dark-green/50 border border-[#006B3A] p-6 hover:scale-[1.02] hover:bg-white hover:shadow-lg transition-all duration-200 cursor-pointer" 
+      className="rounded-lg bg-dark-green/50 border border-[#006B3A] p-4 hover:bg-dark-green/70 transition-all duration-200" 
       role="listitem"
     >
-      <div className="flex items-start justify-between gap-4 mb-3">
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white group-hover:text-dark-green leading-relaxed break-words transition-colors">
-            {pickupLine?.text || 'Unknown pickup line'}
-          </p>
-          <div className="flex items-center gap-2 mt-2 flex-wrap">
-            {pickupLine?.category && (
-              <span className="inline-block px-2 py-1 text-xs font-medium text-light-green bg-light-green/20 rounded-md group-hover:bg-light-green/30">
-                {pickupLine.category}
-              </span>
-            )}
-            <span className="inline-block px-2 py-1 text-xs font-medium text-white/80 bg-white/10 rounded-md group-hover:bg-dark-green/20">
-              Used {totalUses}x
-            </span>
-          </div>
-        </div>
-
-        <div className="flex-shrink-0 text-right">
-          <p className={`text-2xl font-extrabold transition-colors ${
-            successRatePercentage >= 80 ? 'text-medium-green' : 'text-pink'
-          } group-hover:text-dark-green`}>
-            {successRatePercentage.toFixed(0)}%
-          </p>
-          <p className="text-xs text-white/60 group-hover:text-dark-green/60 mt-1 whitespace-nowrap transition-colors">
-            {successfulUses}/{totalUses} success
+      <div className="flex items-start gap-4">
+        {/* Left side: 2/3 width - Pickup line text */}
+        <div className="flex-[2] min-w-0">
+          <p className="text-sm font-medium text-white leading-relaxed break-words">
+            {text}
           </p>
         </div>
-      </div>
 
-      <div className="w-full h-2 bg-white/10 group-hover:bg-dark-green/20 rounded-full overflow-hidden transition-colors">
-        <div
-          className={`h-full transition-all duration-500 ${
-            successRatePercentage >= 80 ? 'bg-medium-green' : 'bg-pink'
-          }`}
-          style={{ width: `${successRatePercentage}%` }}
-          role="progressbar"
-          aria-valuenow={successRatePercentage}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label={`Success rate: ${successRatePercentage.toFixed(0)}%`}
-        />
+        {/* Right side: 1/3 width - Stats */}
+        <div className="flex-1 flex flex-col items-end text-right">
+          <div className="text-xs text-white/60 mb-1">#{position}</div>
+          
+          {hasData ? (
+            <>
+              <div className={`text-xl font-bold ${
+                successRatePercentage >= 80 ? 'text-medium-green' : 'text-pink'
+              }`}>
+                {successRatePercentage.toFixed(0)}%
+              </div>
+              <div className="text-xs text-white/60 mt-1">
+                {successfulUses}/{totalUses} success
+              </div>
+              <div className="text-xs text-white/60">
+                Used {totalUses}x
+              </div>
+            </>
+          ) : (
+            <div className="text-xs text-white/40 mt-2">
+              Not used yet
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -31,13 +31,15 @@ describe('PerformanceDashboard', () => {
     expect(screen.getByRole('button', { name: /sort alphabetically/i })).toBeInTheDocument();
   });
 
-  it('should display empty state when no statistics provided', () => {
+  it('should display all pickup lines even with no statistics', () => {
     render(<PerformanceDashboard statistics={[]} />);
-    expect(screen.getByText('No data yet')).toBeInTheDocument();
-    expect(screen.getByText('Start making calls to see your performance statistics')).toBeInTheDocument();
+    
+    // Should show all 15 pickup lines
+    const pickupLineCards = screen.getAllByRole('listitem');
+    expect(pickupLineCards.length).toBe(15);
   });
 
-  it('should display all pickup lines with their statistics', () => {
+  it('should display pickup lines with statistics', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
     // Check that success rates are displayed
@@ -46,47 +48,44 @@ describe('PerformanceDashboard', () => {
     expect(screen.getByText('20%')).toBeInTheDocument(); // pl-3
   });
 
-  it('should sort alphabetically by default', () => {
+  it('should sort by success rate by default', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    // Default sort should be alphabetical
+    // Top button should be active by default
+    const topButton = screen.getByRole('button', { name: /sort by top performers/i });
+    expect(topButton).toHaveClass('bg-white');
+  });
+
+  it('should change sort order when Alphabetically button is clicked', () => {
+    render(<PerformanceDashboard statistics={mockStatistics} />);
+    
     const alphabeticalButton = screen.getByRole('button', { name: /sort alphabetically/i });
+    fireEvent.click(alphabeticalButton);
+    
     expect(alphabeticalButton).toHaveClass('bg-white');
   });
 
-  it('should change sort order when Top button is clicked', () => {
+  it('should display position numbers', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    const topButton = screen.getByRole('button', { name: /sort by top performers/i });
-    fireEvent.click(topButton);
-    
-    // After sorting by success rate, pl-1 (80%) should be first
-    const successRates = screen.getAllByText(/success$/);
-    expect(successRates[0]).toHaveTextContent('8/10 success'); // pl-1 has 80% success rate
+    // Should show position numbers
+    expect(screen.getByText('#1')).toBeInTheDocument();
   });
 
-  it('should display pickup line text and category', () => {
-    render(<PerformanceDashboard statistics={mockStatistics} />);
-    
-    // Check for pickup line text (from PICKUP_LINES constant)
-    expect(screen.getByText(/Hi, I noticed you've been looking at our product/i)).toBeInTheDocument();
-    expect(screen.getByText('helpful')).toBeInTheDocument();
-  });
-
-  it('should display call counts for each pickup line', () => {
-    render(<PerformanceDashboard statistics={mockStatistics} />);
-    
-    expect(screen.getByText('8/10 success')).toBeInTheDocument();
-    expect(screen.getByText('9/15 success')).toBeInTheDocument();
-    expect(screen.getByText('1/5 success')).toBeInTheDocument();
-  });
-
-  it('should display usage count badges', () => {
+  it('should display usage count for lines with data', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
     expect(screen.getByText('Used 10x')).toBeInTheDocument();
     expect(screen.getByText('Used 15x')).toBeInTheDocument();
     expect(screen.getByText('Used 5x')).toBeInTheDocument();
+  });
+
+  it('should display "Not used yet" for lines without data', () => {
+    render(<PerformanceDashboard statistics={mockStatistics} />);
+    
+    // Should show "Not used yet" for lines without statistics
+    const notUsedTexts = screen.getAllByText('Not used yet');
+    expect(notUsedTexts.length).toBeGreaterThan(0);
   });
 
   it('should highlight active sort button', () => {
@@ -95,27 +94,22 @@ describe('PerformanceDashboard', () => {
     const topButton = screen.getByRole('button', { name: /sort by top performers/i });
     const alphabeticalButton = screen.getByRole('button', { name: /sort alphabetically/i });
     
-    // Alphabetical should be active by default
-    expect(alphabeticalButton).toHaveClass('bg-white');
-    expect(topButton).not.toHaveClass('bg-white');
-    
-    // Click Top
-    fireEvent.click(topButton);
-    
+    // Top should be active by default
     expect(topButton).toHaveClass('bg-white');
     expect(alphabeticalButton).not.toHaveClass('bg-white');
+    
+    // Click Alphabetically
+    fireEvent.click(alphabeticalButton);
+    
+    expect(alphabeticalButton).toHaveClass('bg-white');
+    expect(topButton).not.toHaveClass('bg-white');
   });
 
-  it('should render progress bars with correct widths', () => {
-    const { container } = render(<PerformanceDashboard statistics={mockStatistics} />);
+  it('should display success information', () => {
+    render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    // Query progress bars directly from container since they're in aria-hidden containers
-    const progressBars = container.querySelectorAll('[role="progressbar"]');
-    
-    // Check that progress bars exist and have aria values
-    expect(progressBars.length).toBe(3);
-    expect(progressBars[0]).toHaveAttribute('aria-valuenow');
-    expect(progressBars[1]).toHaveAttribute('aria-valuenow');
-    expect(progressBars[2]).toHaveAttribute('aria-valuenow');
+    expect(screen.getByText('8/10 success')).toBeInTheDocument();
+    expect(screen.getByText('9/15 success')).toBeInTheDocument();
+    expect(screen.getByText('1/5 success')).toBeInTheDocument();
   });
 });

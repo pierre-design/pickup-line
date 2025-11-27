@@ -7,7 +7,7 @@ describe('App', () => {
     render(<App />);
     
     expect(screen.getByText('Pickup Line Coach')).toBeInTheDocument();
-    expect(screen.getByText('Master your call opening techniques')).toBeInTheDocument();
+    expect(screen.getByText('Improve how you start your calls')).toBeInTheDocument();
   });
 
   it('should render performance section', () => {

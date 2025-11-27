@@ -1,0 +1,20 @@
+# Pickup Lines for Sales Calls
+# Edit this file to update the pickup lines used in the application
+# Each line should be a complete pickup line
+# Lines starting with # are comments and will be ignored
+
+Hi, I noticed you've been looking at our product. Can I help answer any questions?
+Good morning! I'm calling because I think we have a solution that could save you time and money.
+Hi there! I saw you downloaded our guide. What did you think?
+Hello! I'm reaching out because companies like yours have seen great results with our service.
+Hi! Quick question - are you currently happy with your [product/service] provider?
+Good afternoon! I have some information that could help you achieve your goals faster.
+Hi! I'm calling to share a limited-time opportunity that might interest you.
+Hello! I wanted to personally reach out because I think we can help solve a common challenge you might be facing.
+Hi there! I'm following up on your recent inquiry. Do you have a few minutes to chat?
+Good morning! I'm calling with some exciting news about how we can improve your workflow.
+Hi! I wanted to introduce myself and tell you about something that's been working really well for your competitors.
+Hello! I promise this will only take two minutes, but it could make a big difference for your business.
+Hi there! I'm reaching out because I have some insights specific to your industry that you might find valuable.
+Good afternoon! I wanted to share how we've helped similar businesses increase their revenue by 30%.
+Hi! I'm calling to see if you'd be interested in a free consultation to discuss your current challenges.
