@@ -6,6 +6,7 @@ import {
   CelebrationAnimation,
   PerformanceDashboard,
   PickupLineCarousel,
+  QuickGuideModal,
 } from './components';
 import type { CallControlPanelRef } from './components';
 import {
@@ -29,6 +30,7 @@ function App() {
   const [currentSession, setCurrentSession] = useState<CallSession | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showQuickGuide, setShowQuickGuide] = useState(false);
   const [statistics, setStatistics] = useState<PickupLineStatistics[]>([]);
 
   const callControlRef = useRef<CallControlPanelRef>(null);
@@ -94,6 +96,14 @@ function App() {
 
   const handleDismissCelebration = () => {
     setShowCelebration(false);
+  };
+
+  const handleShowQuickGuide = () => {
+    setShowQuickGuide(true);
+  };
+
+  const handleDismissQuickGuide = () => {
+    setShowQuickGuide(false);
   };
 
   // Get service info for status indicator
@@ -162,27 +172,15 @@ function App() {
               Improve how you start your calls
             </p>
 
-            {/* Quick Guide - Bottom Info Tile */}
-            <div className="w-full max-w-2xl mt-auto mb-4 flex-shrink-0">
-              <div className="border-2 border-light-green rounded-lg p-6 bg-dark-green/30">
-                <h3 className="text-lg font-bold text-white mb-4 text-center">
-                  Quick Guide
-                </h3>
-                <ol className="text-sm text-white/80 space-y-3">
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">1</span>
-                    <span>Pick the line you want to use.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">2</span>
-                    <span>Start your call and end it when you're done.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">3</span>
-                    <span>The app shows how well your opening landed.</span>
-                  </li>
-                </ol>
-              </div>
+            {/* Need Help Button */}
+            <div className="w-full max-w-2xl mt-auto mb-4 flex-shrink-0 flex justify-center">
+              <button
+                onClick={handleShowQuickGuide}
+                className="px-4 py-2 border-2 border-light-green text-light-green rounded-lg text-sm font-semibold hover:bg-light-green/10 transition-colors"
+                aria-label="Show quick guide"
+              >
+                Need Help?
+              </button>
             </div>
           </div>
         </section>
@@ -205,6 +203,9 @@ function App() {
 
         {/* Celebration Animation */}
         <CelebrationAnimation show={showCelebration} onDismiss={handleDismissCelebration} />
+
+        {/* Quick Guide Modal */}
+        <QuickGuideModal show={showQuickGuide} onDismiss={handleDismissQuickGuide} />
       </div>
     </ErrorBoundary>
   );

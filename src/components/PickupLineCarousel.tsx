@@ -57,10 +57,10 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
                 key={line.id}
                 className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start ${isLast ? 'mr-6 md:mr-0' : ''}`}
               >
-                <div className="bg-white rounded-2xl shadow-lg h-[200px] flex flex-col justify-center relative p-4">
+                <div className="bg-white rounded-2xl shadow-lg h-[280px] flex flex-col justify-center relative p-6">
                   {/* Recommended Badge */}
                   {isTopPerformer && (
-                    <div className="absolute top-4 right-4">
+                    <div className="absolute top-6 right-6">
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-light-green text-black">
                         Recommended
                       </span>

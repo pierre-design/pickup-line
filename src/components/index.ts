@@ -8,3 +8,4 @@ export { PickupLineLibrary } from './PickupLineLibrary';
 export { PickupLineCarousel } from './PickupLineCarousel';
 export { ErrorBoundary } from './ErrorBoundary';
 export { TranscriptionServiceInfo } from './TranscriptionServiceInfo';
+export { QuickGuideModal } from './QuickGuideModal';
