@@ -64,8 +64,8 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
   }, [statistics, sortBy]);
 
   return (
-    <div className="w-full h-full flex flex-col">
-      {/* Sort Controls */}
+    <>
+      {/* Sort Controls - Part of sticky header */}
       <div className="flex justify-center gap-3 mb-6" role="group" aria-label="Sort options">
         <button
           onClick={() => setSortBy('successRate')}
@@ -93,13 +93,13 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
         </button>
       </div>
 
-      {/* Pickup Lines List */}
+      {/* Pickup Lines List - Scrollable content */}
       <div 
-        className="flex-1 overflow-y-auto pr-2" 
+        className="px-6 md:px-8 lg:px-8" 
         role="list" 
         aria-label="Pickup line performance statistics"
       >
-        <div className="space-y-3">
+        <div className="w-full max-w-4xl mx-auto space-y-3 pb-8">
           {allPickupLinesWithStats.map((line) => (
             <PickupLineCard
               key={line.id}
@@ -108,7 +108,7 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

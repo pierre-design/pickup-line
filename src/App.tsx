@@ -191,18 +191,14 @@ function App() {
           </div>
         </section>
 
-        {/* Section 2: Performance Dashboard - Full viewport height */}
-        <section className="min-h-screen h-screen bg-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col px-6 md:px-8 lg:px-8 pt-safe pt-12 md:pt-20 pb-20 md:pb-8 min-h-0">
-            {/* Header */}
-            <div className="w-full max-w-4xl mx-auto mb-6 flex-shrink-0">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">
+        {/* Section 2: Performance Dashboard - Content-based height */}
+        <section className="min-h-screen bg-[#01150A] snap-start snap-always pb-20 md:pb-8">
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-10 bg-[#01150A] pt-safe pt-12 md:pt-20 pb-6 px-6 md:px-8 lg:px-8">
+            <div className="w-full max-w-4xl mx-auto">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6">
                 Your best opening lines
               </h2>
-            </div>
-
-            {/* Performance Dashboard */}
-            <div className="flex-1 w-full max-w-4xl mx-auto min-h-0">
               <PerformanceDashboard statistics={statistics} />
             </div>
           </div>

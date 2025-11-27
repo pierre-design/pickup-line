@@ -22,15 +22,19 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
   return (
     <div className="w-full max-w-2xl">
       {/* Horizontal scrollable container */}
-      <div className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
-        <div className="flex gap-4 pb-4">
-          {sortedLines.map((line) => {
+      <div className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide">
+        <div className="flex gap-4 pb-4 px-6 md:px-0">
+          {sortedLines.map((line, index) => {
             const isTopPerformer = line.id === topPerformerId;
+            const isFirst = index === 0;
+            const isLast = index === sortedLines.length - 1;
             
             return (
               <div
                 key={line.id}
-                className="flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start"
+                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start ${
+                  isFirst ? 'scroll-ml-6 md:scroll-ml-0' : ''
+                } ${isLast ? 'mr-6 md:mr-0' : ''}`}
               >
                 <div className="bg-white rounded-2xl p-8 shadow-lg h-[200px] flex flex-col justify-center relative">
                   {/* Top Performing Badge */}

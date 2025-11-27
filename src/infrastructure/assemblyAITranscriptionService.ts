@@ -45,6 +45,10 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
         },
       });
 
+      if (!response.ok) {
+        throw new Error(`AssemblyAI API error: ${response.status}`);
+      }
+
       const data = await response.json();
       const token = data.token;
 

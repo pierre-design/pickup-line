@@ -15,13 +15,10 @@ export class TranscriptionServiceFactory {
    * Create the best available transcription service
    */
   static create(): AudioTranscriptionService {
-    // Check for AssemblyAI API key
-    if (AssemblyAITranscriptionService.isConfigured()) {
-      console.log('[Factory] Using AssemblyAI transcription service');
-      return new AssemblyAITranscriptionService();
-    }
-
-    // Check for Web Speech API support
+    // Note: AssemblyAI requires a backend server to avoid CORS issues
+    // For browser-only apps, we skip AssemblyAI and use Web Speech API or Mock
+    
+    // Check for Web Speech API support (works in browser)
     if (WebSpeechTranscriptionService.isSupported()) {
       console.log('[Factory] Using Web Speech API transcription service');
       return new WebSpeechTranscriptionService();
