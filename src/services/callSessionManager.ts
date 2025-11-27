@@ -4,6 +4,7 @@ import type {
   CallSession,
   CallSessionResult,
   PickupLine,
+  Feedback,
 } from '../domain/types';
 import type { CallSessionManager, FeedbackGenerator } from './interfaces';
 import type { DataRepository } from '../infrastructure/interfaces';
@@ -12,9 +13,12 @@ import type { DataRepository } from '../infrastructure/interfaces';
  * Error types for call session management
  */
 export class SessionError extends Error {
-  constructor(message: string, public readonly code: string) {
+  public readonly code: string;
+  
+  constructor(message: string, code: string) {
     super(message);
     this.name = 'SessionError';
+    this.code = code;
   }
 }
 
@@ -158,7 +162,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
       text: '', // Will be populated by FeedbackGenerator from its internal library
     };
 
-    let feedback;
+    let feedback: Feedback;
     try {
       feedback = this.feedbackGenerator.generateFeedback(
         this.currentSession.outcome,
@@ -168,7 +172,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
       console.error('Failed to generate feedback:', error);
       // Provide default feedback if generation fails
       feedback = {
-        type: this.currentSession.outcome === 'stayed' ? 'positive' : 'negative',
+        type: (this.currentSession.outcome === 'stayed' ? 'positive' : 'negative') as 'positive' | 'negative',
         message: this.currentSession.outcome === 'stayed' 
           ? 'Great job! The client stayed on the call.'
           : 'The client left the call. Keep practicing!',

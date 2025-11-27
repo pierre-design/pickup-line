@@ -12,7 +12,7 @@ describe('CelebrationAnimation', () => {
   });
 
   it('should not render when show is false', () => {
-    const { container } = render(<CelebrationAnimation show={false} />);
+    render(<CelebrationAnimation show={false} />);
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 

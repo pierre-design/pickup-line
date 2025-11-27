@@ -169,14 +169,12 @@ describe('PickupLineMatcher', () => {
   describe('Custom thresholds', () => {
     it('should respect custom similarity threshold', () => {
       const strictMatcher = new PickupLineMatcher(95);
-      const lenientMatcher = new PickupLineMatcher(70);
       
       const slightlyDifferent = PICKUP_LINES[0].text.substring(0, 30);
       
       const strictResult = strictMatcher.match(slightlyDifferent);
-      const lenientResult = lenientMatcher.match(slightlyDifferent);
       
-      // Lenient matcher might find a match where strict doesn't
+      // Strict matcher should not match partial text
       expect(strictResult).toBeNull();
     });
 

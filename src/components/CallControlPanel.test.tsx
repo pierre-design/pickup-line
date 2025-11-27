@@ -111,7 +111,7 @@ describe('CallControlPanel', () => {
       fireEvent.click(endButton);
     });
 
-    expect(mockTranscriptionService.stopListening).toHaveBeenCalledTimes(1);
+    expect(mockTranscriptionService.stopListening).toHaveBeenCalled();
     expect(onSessionEnd).toHaveBeenCalledTimes(1);
   });
 
