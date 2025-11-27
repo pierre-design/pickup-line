@@ -100,19 +100,32 @@ function App() {
     setShowOutcomeSelector(false);
 
     if (!currentSession) {
+      console.warn('No current session when selecting outcome');
       return;
     }
 
     try {
+      // Record the outcome
       sessionManager.recordOutcome(outcome);
+      
+      // End the session and get feedback
       const result = sessionManager.endSession();
 
+      // Update statistics if a pickup line was used
       if (currentSession.pickupLineUsed) {
-        await performanceAnalyzer.updateStatistics(currentSession.pickupLineUsed, outcome);
-        const updatedStats = performanceAnalyzer.getAllStatistics();
-        setStatistics(updatedStats);
+        try {
+          await performanceAnalyzer.updateStatistics(currentSession.pickupLineUsed, outcome);
+          const updatedStats = performanceAnalyzer.getAllStatistics();
+          setStatistics(updatedStats);
+        } catch (statsError) {
+          console.error('Error updating statistics:', statsError);
+          // Continue anyway - don't fail the whole operation
+        }
+      } else {
+        console.log('No pickup line was used in this session');
       }
 
+      // Show feedback
       setFeedback(result.feedback);
 
       if (result.feedback.showCelebration) {
@@ -122,9 +135,14 @@ function App() {
       setCurrentSession(null);
     } catch (error) {
       console.error('Error ending session:', error);
+      console.error('Error details:', error);
+      
+      // Still clear the session
+      setCurrentSession(null);
+      
       setFeedback({
         type: 'negative',
-        message: 'Unable to save call results. Please contact support.',
+        message: 'Call ended successfully, but there was an issue saving the results.',
         showCelebration: false,
       });
     }

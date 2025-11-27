@@ -20,7 +20,7 @@ export function OutcomeSelector({ show, onSelect, suggestedOutcome, confidence }
           initial={{ y: '100%' }}
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
-          transition={{ type: 'tween', duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+          transition={{ type: 'tween', duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="absolute bottom-0 left-4 right-4 bg-[#04411F] rounded-t-3xl shadow-2xl"
         >
           <div className="p-6 pb-8">
@@ -49,7 +49,7 @@ export function OutcomeSelector({ show, onSelect, suggestedOutcome, confidence }
                 className={`flex-1 px-6 py-4 rounded-lg font-bold transition-all border-2 ${
                   suggestedOutcome === 'stayed'
                     ? 'border-white bg-white/10 text-white'
-                    : 'border-white text-white hover:bg-white/10'
+                    : 'border-white text-white hover:bg-white hover:text-black'
                 }`}
               >
                 They Stayed
@@ -59,7 +59,7 @@ export function OutcomeSelector({ show, onSelect, suggestedOutcome, confidence }
                 className={`flex-1 px-6 py-4 rounded-lg font-bold transition-all border-2 ${
                   suggestedOutcome === 'left'
                     ? 'border-white bg-white/10 text-white'
-                    : 'border-white text-white hover:bg-white/10'
+                    : 'border-white text-white hover:bg-white hover:text-black'
                 }`}
               >
                 They Left

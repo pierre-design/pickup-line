@@ -23,7 +23,7 @@ export function FeedbackCard({ feedback, onDismiss }: FeedbackCardProps) {
         initial={{ y: '100%' }}
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
-        transition={{ type: 'tween', duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+        transition={{ type: 'tween', duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="fixed bottom-0 left-4 right-4 bg-[#04411F] z-50 rounded-t-3xl shadow-2xl"
         role="alert"
         aria-live="polite"
