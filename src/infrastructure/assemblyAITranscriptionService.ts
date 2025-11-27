@@ -37,16 +37,17 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
     }
 
     try {
-      // Get temporary token from AssemblyAI
-      const response = await fetch('https://api.assemblyai.com/v2/realtime/token', {
+      // Get temporary token from our proxy endpoint (avoids CORS)
+      const response = await fetch('/api/assemblyai-token', {
         method: 'POST',
         headers: {
-          'authorization': this.apiKey,
+          'content-type': 'application/json',
         },
       });
 
       if (!response.ok) {
-        throw new Error(`AssemblyAI API error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Failed to get AssemblyAI token: ${errorData.error || response.status}`);
       }
 
       const data = await response.json();
