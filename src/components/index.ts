@@ -9,3 +9,4 @@ export { PickupLineCarousel } from './PickupLineCarousel';
 export { ErrorBoundary } from './ErrorBoundary';
 export { TranscriptionServiceInfo } from './TranscriptionServiceInfo';
 export { QuickGuideModal } from './QuickGuideModal';
+export { OutcomeSelector } from './OutcomeSelector';

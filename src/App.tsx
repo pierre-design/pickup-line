@@ -7,6 +7,7 @@ import {
   PerformanceDashboard,
   PickupLineCarousel,
   QuickGuideModal,
+  OutcomeSelector,
 } from './components';
 import type { CallControlPanelRef } from './components';
 import {
@@ -16,6 +17,7 @@ import {
 } from './services';
 import { LocalStorageDataRepository, TranscriptionServiceFactory } from './infrastructure';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { OutcomeDetector } from './domain/outcomeDetector';
 import './App.css';
 
 function App() {
@@ -31,9 +33,13 @@ function App() {
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [showCelebration, setShowCelebration] = useState(false);
   const [showQuickGuide, setShowQuickGuide] = useState(false);
+  const [showOutcomeSelector, setShowOutcomeSelector] = useState(false);
+  const [suggestedOutcome, setSuggestedOutcome] = useState<'stayed' | 'left' | null>(null);
+  const [outcomeConfidence, setOutcomeConfidence] = useState<number>(0);
   const [statistics, setStatistics] = useState<PickupLineStatistics[]>([]);
 
   const callControlRef = useRef<CallControlPanelRef>(null);
+  const [outcomeDetector] = useState(() => new OutcomeDetector());
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -61,9 +67,43 @@ function App() {
       return;
     }
 
-    try {
-      const outcome: 'stayed' | 'left' = Math.random() > 0.5 ? 'stayed' : 'left';
+    // Detect outcome using AI if we have client transcription
+    if (currentSession.clientTranscription) {
+      const callDuration = currentSession.endTime && currentSession.startTime
+        ? (currentSession.endTime.getTime() - currentSession.startTime.getTime()) / 1000
+        : 0;
+
+      const detection = outcomeDetector.detectOutcome(
+        currentSession.clientTranscription,
+        callDuration
+      );
+
+      setSuggestedOutcome(detection.suggestedOutcome);
+      setOutcomeConfidence(detection.confidence);
       
+      console.log('[AI Outcome Detection]', {
+        suggested: detection.suggestedOutcome,
+        confidence: detection.confidence,
+        signals: detection.signals,
+      });
+    } else {
+      // No transcription available, show manual selector without suggestion
+      setSuggestedOutcome(null);
+      setOutcomeConfidence(0);
+    }
+
+    // Show outcome selector
+    setShowOutcomeSelector(true);
+  };
+
+  const handleOutcomeSelect = async (outcome: 'stayed' | 'left') => {
+    setShowOutcomeSelector(false);
+
+    if (!currentSession) {
+      return;
+    }
+
+    try {
       sessionManager.recordOutcome(outcome);
       const result = sessionManager.endSession();
 
@@ -84,7 +124,7 @@ function App() {
       console.error('Error ending session:', error);
       setFeedback({
         type: 'negative',
-        message: 'An error occurred while processing the call. Please try again.',
+        message: 'Unable to save call results. Please contact support.',
         showCelebration: false,
       });
     }
@@ -206,6 +246,14 @@ function App() {
 
         {/* Quick Guide Modal */}
         <QuickGuideModal show={showQuickGuide} onDismiss={handleDismissQuickGuide} />
+
+        {/* Outcome Selector */}
+        <OutcomeSelector 
+          show={showOutcomeSelector} 
+          onSelect={handleOutcomeSelect}
+          suggestedOutcome={suggestedOutcome}
+          confidence={outcomeConfidence}
+        />
       </div>
     </ErrorBoundary>
   );
