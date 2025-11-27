@@ -140,6 +140,15 @@ function App() {
               </div>
             </div>
 
+            {/* Proposed Opening Line Tile */}
+            <div className="w-full max-w-2xl mb-8">
+              <div className="bg-white rounded-2xl p-8 shadow-lg">
+                <p className="text-dark-green text-xl sm:text-2xl font-semibold leading-relaxed text-center">
+                  "Hi, I noticed you've been looking at our product. Can I help answer any questions?"
+                </p>
+              </div>
+            </div>
+
             {/* Call Control Panel */}
             <div className="w-full max-w-md mb-6">
               <CallControlPanel
@@ -159,9 +168,8 @@ function App() {
             {/* Quick Guide - Bottom Info Tile */}
             <div className="w-full max-w-2xl mt-auto mb-8">
               <div className="border-2 border-light-green rounded-lg p-6 bg-dark-green/30">
-                <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                  <span>💡</span>
-                  <span>Quick Guide</span>
+                <h3 className="text-lg font-bold text-white mb-4">
+                  Quick Guide
                 </h3>
                 <ol className="text-sm text-white/80 space-y-3">
                   <li className="flex items-start gap-3">

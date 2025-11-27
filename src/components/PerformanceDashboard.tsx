@@ -12,7 +12,7 @@ interface PerformanceDashboardProps {
  * Requirements: 7.1, 7.2, 7.3, 7.4
  */
 export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) {
-  const [sortBy, setSortBy] = useState<'successRate' | 'totalUses' | 'alphabetical'>('successRate');
+  const [sortBy, setSortBy] = useState<'successRate' | 'alphabetical'>('alphabetical');
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const itemHeight = 100;
@@ -33,9 +33,6 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
     switch (sortBy) {
       case 'successRate':
         sorted.sort((a, b) => b.successRate - a.successRate);
-        break;
-      case 'totalUses':
-        sorted.sort((a, b) => b.totalUses - a.totalUses);
         break;
       case 'alphabetical':
         sorted.sort((a, b) => {
@@ -76,13 +73,13 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
   return (
     <div className="w-full h-full flex flex-col">
       {/* Sort Controls */}
-      <div className="flex justify-center gap-2 mb-6" role="group" aria-label="Sort options">
+      <div className="flex justify-center gap-3 mb-6" role="group" aria-label="Sort options">
         <button
           onClick={() => setSortBy('successRate')}
-          className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-yellow min-h-[44px] ${
+          className={`px-6 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white min-h-[44px] ${
             sortBy === 'successRate'
-              ? 'bg-yellow text-black'
-              : 'border-2 border-light-green text-light-green hover:bg-light-green hover:text-dark-green'
+              ? 'bg-white text-dark-green'
+              : 'border-2 border-white text-white hover:bg-white/10'
           }`}
           aria-label="Sort by top performers"
           aria-pressed={sortBy === 'successRate'}
@@ -90,28 +87,16 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
           Top
         </button>
         <button
-          onClick={() => setSortBy('totalUses')}
-          className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-yellow min-h-[44px] ${
-            sortBy === 'totalUses'
-              ? 'bg-yellow text-black'
-              : 'border-2 border-light-green text-light-green hover:bg-light-green hover:text-dark-green'
-          }`}
-          aria-label="Sort by most used"
-          aria-pressed={sortBy === 'totalUses'}
-        >
-          Most used
-        </button>
-        <button
           onClick={() => setSortBy('alphabetical')}
-          className={`px-6 py-2.5 text-sm font-bold rounded-lg transition-all focus:outline-none focus:ring-2 focus:ring-yellow min-h-[44px] ${
+          className={`px-6 py-2.5 text-sm font-bold rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-white min-h-[44px] ${
             sortBy === 'alphabetical'
-              ? 'bg-yellow text-black'
-              : 'border-2 border-light-green text-light-green hover:bg-light-green hover:text-dark-green'
+              ? 'bg-white text-dark-green'
+              : 'border-2 border-white text-white hover:bg-white/10'
           }`}
           aria-label="Sort alphabetically"
           aria-pressed={sortBy === 'alphabetical'}
         >
-          A to Z
+          Alphabetically
         </button>
       </div>
 
@@ -170,11 +155,16 @@ function PickupLineStatCard({ statistic }: PickupLineStatCardProps) {
           <p className="text-sm font-semibold text-white group-hover:text-dark-green leading-relaxed break-words transition-colors">
             {pickupLine?.text || 'Unknown pickup line'}
           </p>
-          {pickupLine?.category && (
-            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-light-green bg-light-green/20 rounded-md group-hover:bg-light-green/30">
-              {pickupLine.category}
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            {pickupLine?.category && (
+              <span className="inline-block px-2 py-1 text-xs font-medium text-light-green bg-light-green/20 rounded-md group-hover:bg-light-green/30">
+                {pickupLine.category}
+              </span>
+            )}
+            <span className="inline-block px-2 py-1 text-xs font-medium text-white/80 bg-white/10 rounded-md group-hover:bg-dark-green/20">
+              Used {totalUses}x
             </span>
-          )}
+          </div>
         </div>
 
         <div className="flex-shrink-0 text-right">
@@ -184,7 +174,7 @@ function PickupLineStatCard({ statistic }: PickupLineStatCardProps) {
             {successRatePercentage.toFixed(0)}%
           </p>
           <p className="text-xs text-white/60 group-hover:text-dark-green/60 mt-1 whitespace-nowrap transition-colors">
-            {successfulUses}/{totalUses} calls
+            {successfulUses}/{totalUses} success
           </p>
         </div>
       </div>

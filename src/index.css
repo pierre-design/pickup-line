@@ -1,14 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-darkest-green: #01150A;
+  --color-dark-green: #04411F;
+  --color-medium-green: #00953B;
+  --color-light-green: #8DCB89;
+  --color-yellow: #FFDD00;
+  --color-pink: #F87171;
+  
+  --color-primary: #00953B;
+  --color-secondary: #FFDD00;
+  --color-success: #00953B;
+  --color-warning: #FFDD00;
+  --color-error: #F87171;
+}
 
 :root {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  color: #000000;
-  background-color: #F2F2F7;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -16,10 +26,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #01150A;
+  color: white;
+  overflow: hidden;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(4, 65, 31, 0.5);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(141, 203, 137, 0.2);
 }
 
 /* Accessibility: Focus indicators */

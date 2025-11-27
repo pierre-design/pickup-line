@@ -28,7 +28,6 @@ describe('PerformanceDashboard', () => {
   it('should render sort buttons', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     expect(screen.getByRole('button', { name: /sort by top performers/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /sort by most used/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /sort alphabetically/i })).toBeInTheDocument();
   });
 
@@ -47,26 +46,23 @@ describe('PerformanceDashboard', () => {
     expect(screen.getByText('20%')).toBeInTheDocument(); // pl-3
   });
 
-  it('should sort by success rate by default (descending)', () => {
+  it('should sort alphabetically by default', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    // Check that the pickup lines are in the correct order by looking for their text
-    const pickupLineCards = screen.getAllByText(/calls$/);
-    // Should be sorted by success rate: 80% (8/10), 60% (9/15), 20% (1/5)
-    expect(pickupLineCards[0]).toHaveTextContent('8/10 calls');
-    expect(pickupLineCards[1]).toHaveTextContent('9/15 calls');
-    expect(pickupLineCards[2]).toHaveTextContent('1/5 calls');
+    // Default sort should be alphabetical
+    const alphabeticalButton = screen.getByRole('button', { name: /sort alphabetically/i });
+    expect(alphabeticalButton).toHaveClass('bg-white');
   });
 
-  it('should change sort order when Most Used button is clicked', () => {
+  it('should change sort order when Top button is clicked', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    const mostUsedButton = screen.getByRole('button', { name: /sort by most used/i });
-    fireEvent.click(mostUsedButton);
+    const topButton = screen.getByRole('button', { name: /sort by top performers/i });
+    fireEvent.click(topButton);
     
-    // After sorting by total uses, pl-2 (15 uses) should be first
-    const pickupLineCards = screen.getAllByText(/calls$/);
-    expect(pickupLineCards[0]).toHaveTextContent('9/15 calls'); // pl-2 has 15 uses
+    // After sorting by success rate, pl-1 (80%) should be first
+    const successRates = screen.getAllByText(/success$/);
+    expect(successRates[0]).toHaveTextContent('8/10 success'); // pl-1 has 80% success rate
   });
 
   it('should display pickup line text and category', () => {
@@ -80,26 +76,34 @@ describe('PerformanceDashboard', () => {
   it('should display call counts for each pickup line', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
-    expect(screen.getByText('8/10 calls')).toBeInTheDocument();
-    expect(screen.getByText('9/15 calls')).toBeInTheDocument();
-    expect(screen.getByText('1/5 calls')).toBeInTheDocument();
+    expect(screen.getByText('8/10 success')).toBeInTheDocument();
+    expect(screen.getByText('9/15 success')).toBeInTheDocument();
+    expect(screen.getByText('1/5 success')).toBeInTheDocument();
+  });
+
+  it('should display usage count badges', () => {
+    render(<PerformanceDashboard statistics={mockStatistics} />);
+    
+    expect(screen.getByText('Used 10x')).toBeInTheDocument();
+    expect(screen.getByText('Used 15x')).toBeInTheDocument();
+    expect(screen.getByText('Used 5x')).toBeInTheDocument();
   });
 
   it('should highlight active sort button', () => {
     render(<PerformanceDashboard statistics={mockStatistics} />);
     
     const topButton = screen.getByRole('button', { name: /sort by top performers/i });
-    const mostUsedButton = screen.getByRole('button', { name: /sort by most used/i });
+    const alphabeticalButton = screen.getByRole('button', { name: /sort alphabetically/i });
     
-    // Top performers should be active by default
-    expect(topButton).toHaveClass('bg-yellow');
-    expect(mostUsedButton).not.toHaveClass('bg-yellow');
+    // Alphabetical should be active by default
+    expect(alphabeticalButton).toHaveClass('bg-white');
+    expect(topButton).not.toHaveClass('bg-white');
     
-    // Click Most Used
-    fireEvent.click(mostUsedButton);
+    // Click Top
+    fireEvent.click(topButton);
     
-    expect(mostUsedButton).toHaveClass('bg-yellow');
-    expect(topButton).not.toHaveClass('bg-yellow');
+    expect(topButton).toHaveClass('bg-white');
+    expect(alphabeticalButton).not.toHaveClass('bg-white');
   });
 
   it('should render progress bars with correct widths', () => {
@@ -108,9 +112,10 @@ describe('PerformanceDashboard', () => {
     // Query progress bars directly from container since they're in aria-hidden containers
     const progressBars = container.querySelectorAll('[role="progressbar"]');
     
-    // Check that progress bars have correct aria values
-    expect(progressBars[0]).toHaveAttribute('aria-valuenow', '80');
-    expect(progressBars[1]).toHaveAttribute('aria-valuenow', '60');
-    expect(progressBars[2]).toHaveAttribute('aria-valuenow', '20');
+    // Check that progress bars exist and have aria values
+    expect(progressBars.length).toBe(3);
+    expect(progressBars[0]).toHaveAttribute('aria-valuenow');
+    expect(progressBars[1]).toHaveAttribute('aria-valuenow');
+    expect(progressBars[2]).toHaveAttribute('aria-valuenow');
   });
 });

@@ -115,9 +115,6 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
           aria-label={`Detected opener: ${detectedPickupLine.text}`}
         >
           <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-              <span className="text-xl">✨</span>
-            </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">
                 Detected Opener
