@@ -118,7 +118,7 @@ function App() {
             <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
-                  Pickup Line Coach
+                  Pickup Lines
                 </h1>
                 
                 {/* Status Chip */}
@@ -171,19 +171,15 @@ function App() {
                 <ol className="text-sm text-white/80 space-y-3">
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">1</span>
-                    <span>Click "Start Call" to begin a new session</span>
+                    <span>Pick the line you want to use.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">2</span>
-                    <span>Use one of the pickup lines from your library</span>
+                    <span>Start your call and end it when you're done.</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">3</span>
-                    <span>Click "End Call" when the conversation concludes</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-light-green/20 text-light-green flex items-center justify-center text-xs font-bold">4</span>
-                    <span>Review your feedback and track your performance below</span>
+                    <span>The app shows how well your opening landed.</span>
                   </li>
                 </ol>
               </div>
@@ -197,7 +193,7 @@ function App() {
           <div className="sticky top-0 z-10 bg-[#01150A] pt-safe pt-12 md:pt-20 pb-6 px-6 md:px-8 lg:px-8">
             <div className="w-full max-w-4xl mx-auto">
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6">
-                Your best opening lines
+                Your best pickup
               </h2>
               <PerformanceDashboard statistics={statistics} />
             </div>
