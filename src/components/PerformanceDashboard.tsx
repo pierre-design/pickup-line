@@ -90,16 +90,16 @@ function PickupLineCard({ line }: PickupLineCardProps) {
       role="listitem"
     >
       <div className="flex items-start gap-4">
-        {/* Left side: 2/3 width - Pickup line text */}
-        <div className="flex-[2] min-w-0">
+        {/* Left side: 3/4 width - Pickup line text */}
+        <div className="flex-[3] min-w-0">
           <p className="text-sm font-medium text-white leading-relaxed break-words">
             {text}
           </p>
         </div>
 
-        {/* Right side: 1/3 width - Stats */}
+        {/* Right side: 1/4 width - Stats */}
         <div className="flex-1 flex flex-col items-end text-right">
-          <div className="text-xs text-white/60 mb-1">#{position}</div>
+          <div className="text-sm font-bold text-white/60 mb-1">#{position}</div>
           
           {hasData ? (
             <>
