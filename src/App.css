@@ -2,13 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* SF Pro Font Weights */
+@layer base {
+  .font-extrabold {
+    font-weight: 800;
+  }
+  .font-bold {
+    font-weight: 700;
+  }
+  .font-semibold {
+    font-weight: 600;
+  }
+  .font-medium {
+    font-weight: 500;
+  }
+}
+
 /* Global styles */
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   
-  color-scheme: light dark;
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.87);
   
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,6 +37,17 @@ body {
   margin: 0;
   min-height: 100vh;
   background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
+  color: rgba(255, 255, 255, 0.87);
+}
+
+/* Ensure all text is readable on dark background */
+h1, h2, h3, h4, h5, h6 {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+p {
+  color: rgba(255, 255, 255, 0.87);
 }
 
 /* Custom scrollbar */
@@ -156,4 +184,21 @@ button:disabled {
   );
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
+}
+
+/* Text contrast utilities */
+.text-contrast-high {
+  color: #FFFFFF;
+}
+
+.text-contrast-medium {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.text-contrast-low {
+  color: rgba(255, 255, 255, 0.60);
+}
+
+.text-contrast-disabled {
+  color: rgba(255, 255, 255, 0.38);
 }

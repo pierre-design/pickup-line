@@ -15,9 +15,8 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
   const [sortBy, setSortBy] = useState<'successRate' | 'totalUses' | 'alphabetical'>('successRate');
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const itemHeight = 100; // Approximate height of each item in pixels
+  const itemHeight = 100;
 
-  // Calculate overall statistics
   const overallStats = useMemo(() => {
     const totalCalls = statistics.reduce((sum, stat) => sum + stat.totalUses, 0);
     const totalSuccessful = statistics.reduce((sum, stat) => sum + stat.successfulUses, 0);
@@ -29,7 +28,6 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
     };
   }, [statistics]);
 
-  // Sort statistics based on selected sort option (memoized)
   const sortedStatistics = useMemo(() => {
     const statsWithPickupLines = statistics.map(stat => {
       const pickupLine = PICKUP_LINES.find(pl => pl.id === stat.pickupLineId);
@@ -60,12 +58,10 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
     return sorted;
   }, [statistics, sortBy]);
 
-  // Get visible items for virtualization (memoized)
   const visibleItems = useMemo(() => {
     return sortedStatistics.slice(visibleRange.start, visibleRange.end);
   }, [sortedStatistics, visibleRange]);
 
-  // Handle scroll for virtualization
   const handleScroll = useCallback(() => {
     if (!scrollContainerRef.current) return;
 
@@ -73,12 +69,11 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
     const containerHeight = scrollContainerRef.current.clientHeight;
 
     const start = Math.floor(scrollTop / itemHeight);
-    const end = Math.ceil((scrollTop + containerHeight) / itemHeight) + 5; // Buffer of 5 items
+    const end = Math.ceil((scrollTop + containerHeight) / itemHeight) + 5;
 
     setVisibleRange({ start: Math.max(0, start), end: Math.min(sortedStatistics.length, end) });
   }, [sortedStatistics.length, itemHeight]);
 
-  // Set up scroll listener
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -88,39 +83,39 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
   }, [handleScroll]);
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-sm">
+    <div className="w-full max-w-4xl mx-auto">
       {/* Header */}
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Performance Dashboard</h2>
+      <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-6">Performance Dashboard</h2>
 
       {/* Overall Statistics */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
-        <div className="p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg sm:rounded-xl border border-blue-200">
-          <p className="text-xs sm:text-sm font-semibold text-blue-600 uppercase tracking-wide mb-1">
+      <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="glass p-6 rounded-2xl border border-white/10 hover-lift">
+          <p className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-2">
             Total Calls
           </p>
-          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-blue-900">{overallStats.totalCalls}</p>
+          <p className="text-4xl font-extrabold text-white">{overallStats.totalCalls}</p>
         </div>
 
-        <div className="p-4 sm:p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-lg sm:rounded-xl border border-green-200">
-          <p className="text-xs sm:text-sm font-semibold text-green-600 uppercase tracking-wide mb-1">
+        <div className="glass p-6 rounded-2xl border border-primary/30 hover-lift">
+          <p className="text-sm font-semibold text-white/60 uppercase tracking-wide mb-2">
             Success Rate
           </p>
-          <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-green-900">
+          <p className="text-4xl font-extrabold text-primary">
             {overallStats.overallSuccessRate.toFixed(1)}%
           </p>
         </div>
       </div>
 
       {/* Sort Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Pickup Line Performance</h3>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+        <h3 className="text-lg font-bold text-white">Pickup Line Performance</h3>
         <div className="flex flex-wrap gap-2 w-full sm:w-auto" role="group" aria-label="Sort options">
           <button
             onClick={() => setSortBy('successRate')}
-            className={`flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 min-h-[44px] touch-manipulation ${
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] ${
               sortBy === 'successRate'
-                ? 'bg-primary text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300'
+                ? 'bg-primary text-white shadow-glow-primary'
+                : 'glass text-white/80 hover:text-white hover:bg-white/10'
             }`}
             aria-label="Sort by success rate"
             aria-pressed={sortBy === 'successRate'}
@@ -129,10 +124,10 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
           </button>
           <button
             onClick={() => setSortBy('totalUses')}
-            className={`flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 min-h-[44px] touch-manipulation ${
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] ${
               sortBy === 'totalUses'
-                ? 'bg-primary text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300'
+                ? 'bg-primary text-white shadow-glow-primary'
+                : 'glass text-white/80 hover:text-white hover:bg-white/10'
             }`}
             aria-label="Sort by total uses"
             aria-pressed={sortBy === 'totalUses'}
@@ -141,10 +136,10 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
           </button>
           <button
             onClick={() => setSortBy('alphabetical')}
-            className={`flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 min-h-[44px] touch-manipulation ${
+            className={`flex-1 sm:flex-none px-4 py-2.5 text-sm font-semibold rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900 min-h-[44px] ${
               sortBy === 'alphabetical'
-                ? 'bg-primary text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 active:bg-gray-300'
+                ? 'bg-primary text-white shadow-glow-primary'
+                : 'glass text-white/80 hover:text-white hover:bg-white/10'
             }`}
             aria-label="Sort alphabetically"
             aria-pressed={sortBy === 'alphabetical'}
@@ -154,22 +149,22 @@ export function PerformanceDashboard({ statistics }: PerformanceDashboardProps) 
         </div>
       </div>
 
-      {/* Pickup Lines List with Virtualization */}
+      {/* Pickup Lines List */}
       <div 
         ref={scrollContainerRef}
-        className="max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] overflow-y-auto pr-1 sm:pr-2" 
+        className="max-h-[600px] overflow-y-auto pr-2" 
         role="list" 
         aria-label="Pickup line performance statistics"
       >
         {sortedStatistics.length === 0 ? (
-          <div className="text-center py-8 sm:py-12 text-gray-500" role="status">
-            <p className="text-base sm:text-lg font-medium mb-2">No data yet</p>
-            <p className="text-xs sm:text-sm">Start making calls to see your performance statistics</p>
+          <div className="glass p-12 rounded-2xl text-center border border-white/10" role="status">
+            <p className="text-lg font-bold text-white mb-2">No data yet</p>
+            <p className="text-sm text-white/60">Start making calls to see your performance statistics</p>
           </div>
         ) : (
           <div style={{ height: `${sortedStatistics.length * itemHeight}px`, position: 'relative' }}>
             <div 
-              className="space-y-2 sm:space-y-3"
+              className="space-y-3"
               style={{ 
                 transform: `translateY(${visibleRange.start * itemHeight}px)`,
                 position: 'absolute',
@@ -194,24 +189,20 @@ interface PickupLineStatCardProps {
   statistic: PickupLineStatistics & { pickupLine?: { id: string; text: string; category?: string } };
 }
 
-/**
- * Individual pickup line statistics card
- */
 function PickupLineStatCard({ statistic }: PickupLineStatCardProps) {
   const { pickupLine, totalUses, successfulUses, successRate } = statistic;
 
-  // Determine color based on success rate
   const getSuccessRateColor = (rate: number) => {
-    if (rate >= 70) return 'bg-success';
-    if (rate >= 50) return 'bg-blue-500';
-    if (rate >= 30) return 'bg-warning';
-    return 'bg-error';
+    if (rate >= 70) return 'from-primary to-green-600';
+    if (rate >= 50) return 'from-blue-500 to-blue-600';
+    if (rate >= 30) return 'from-secondary to-yellow-500';
+    return 'from-error to-red-600';
   };
 
   const getSuccessRateTextColor = (rate: number) => {
-    if (rate >= 70) return 'text-success';
-    if (rate >= 50) return 'text-blue-500';
-    if (rate >= 30) return 'text-warning';
+    if (rate >= 70) return 'text-primary';
+    if (rate >= 50) return 'text-blue-400';
+    if (rate >= 30) return 'text-secondary';
     return 'text-error';
   };
 
@@ -219,37 +210,34 @@ function PickupLineStatCard({ statistic }: PickupLineStatCardProps) {
 
   return (
     <div 
-      className="p-3 sm:p-4 bg-gray-50 rounded-lg sm:rounded-xl border border-gray-200 hover:border-gray-300 transition-colors" 
+      className="glass p-4 rounded-xl border border-white/10 hover:border-white/20 hover-lift transition-all" 
       role="listitem"
     >
-      {/* Pickup Line Text */}
-      <div className="flex items-start justify-between gap-3 mb-2 sm:mb-3">
+      <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex-1 min-w-0">
-          <p className="text-xs sm:text-sm font-medium text-gray-900 leading-relaxed break-words">
+          <p className="text-sm font-semibold text-white leading-relaxed break-words">
             {pickupLine?.text || 'Unknown pickup line'}
           </p>
           {pickupLine?.category && (
-            <span className="inline-block mt-1 sm:mt-1.5 px-2 py-0.5 text-xs font-medium text-gray-600 bg-gray-200 rounded-md">
+            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-white/80 bg-white/10 rounded-md">
               {pickupLine.category}
             </span>
           )}
         </div>
 
-        {/* Success Rate Badge */}
         <div className="flex-shrink-0 text-right">
-          <p className={`text-xl sm:text-2xl font-bold ${getSuccessRateTextColor(successRatePercentage)}`}>
+          <p className={`text-2xl font-extrabold ${getSuccessRateTextColor(successRatePercentage)}`}>
             {successRatePercentage.toFixed(0)}%
           </p>
-          <p className="text-xs text-gray-500 mt-0.5 whitespace-nowrap">
+          <p className="text-xs text-white/60 mt-1 whitespace-nowrap">
             {successfulUses}/{totalUses} calls
           </p>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden" aria-hidden="true">
+      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
         <div
-          className={`h-full ${getSuccessRateColor(successRatePercentage)} transition-all duration-500 ease-out`}
+          className={`h-full bg-gradient-to-r ${getSuccessRateColor(successRatePercentage)} transition-all duration-500`}
           style={{ width: `${successRatePercentage}%` }}
           role="progressbar"
           aria-valuenow={successRatePercentage}
