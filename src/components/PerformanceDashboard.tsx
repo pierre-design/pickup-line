@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { PickupLineStatistics } from '../domain/types';
 import { PICKUP_LINES } from '../domain/pickupLines';
 
