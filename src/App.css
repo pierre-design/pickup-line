@@ -134,6 +134,26 @@ button:disabled {
   scrollbar-width: none;
 }
 
+/* Horizontal snap scrolling */
+.snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.snap-x.snap-mandatory {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 /* Animated gradient for buttons */
 @keyframes gradient-shift {
   0% {

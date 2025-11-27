@@ -113,9 +113,9 @@ function App() {
 
         {/* Section 1: Home / Call Control - Full viewport height */}
         <section className="min-h-screen h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col items-center px-6 md:px-8 lg:px-8 pt-safe pt-8 pb-safe pb-4 overflow-y-auto min-h-0">
+          <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-8 lg:px-8 pt-safe pt-8 pb-20 md:pb-8 min-h-0">
             {/* Header with Status Indicator */}
-            <div className="w-full max-w-2xl mb-6 mt-4">
+            <div className="w-full max-w-2xl mb-4">
               <div className="flex items-center justify-between mb-4">
                 <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
                   Pickup Line Coach
@@ -142,12 +142,12 @@ function App() {
             </div>
 
             {/* Pickup Line Carousel */}
-            <div className="w-full max-w-2xl mb-8">
+            <div className="w-full max-w-2xl mb-6">
               <PickupLineCarousel statistics={statistics} />
             </div>
 
             {/* Call Control Panel */}
-            <div className="w-full max-w-md mb-6">
+            <div className="w-full max-w-md mb-4">
               <CallControlPanel
                 ref={callControlRef}
                 sessionManager={sessionManager}
@@ -158,7 +158,7 @@ function App() {
             </div>
 
             {/* Description below button */}
-            <p className="text-light-green text-center text-sm sm:text-base mb-8">
+            <p className="text-light-green text-center text-sm sm:text-base mb-6">
               Improve how you start your calls
             </p>
 
@@ -193,7 +193,7 @@ function App() {
 
         {/* Section 2: Performance Dashboard - Full viewport height */}
         <section className="min-h-screen h-screen bg-[#01150A] flex flex-col snap-start snap-always">
-          <div className="flex-1 flex flex-col px-6 md:px-8 lg:px-8 pt-safe pt-12 md:pt-20 pb-safe pb-8 min-h-0">
+          <div className="flex-1 flex flex-col px-6 md:px-8 lg:px-8 pt-safe pt-12 md:pt-20 pb-20 md:pb-8 min-h-0">
             {/* Header */}
             <div className="w-full max-w-4xl mx-auto mb-6 flex-shrink-0">
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-4">

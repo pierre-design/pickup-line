@@ -20,9 +20,9 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
   });
 
   return (
-    <div className="w-full max-w-2xl -mx-6 px-6 md:mx-0 md:px-0">
+    <div className="w-full max-w-2xl">
       {/* Horizontal scrollable container */}
-      <div className="overflow-x-auto overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide">
+      <div className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
         <div className="flex gap-4 pb-4">
           {sortedLines.map((line) => {
             const isTopPerformer = line.id === topPerformerId;
@@ -30,7 +30,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
             return (
               <div
                 key={line.id}
-                className="flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-center snap-always"
+                className="flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start"
               >
                 <div className="bg-white rounded-2xl p-8 shadow-lg h-[200px] flex flex-col justify-center relative">
                   {/* Top Performing Badge */}
