@@ -1,76 +1,159 @@
-/* App-specific styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Smooth transitions for tab switching */
-main > div {
-  animation: fadeIn 0.3s ease-in-out;
+/* Global styles */
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  
+  color-scheme: light dark;
+  
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Ensure proper spacing for fixed elements */
 body {
-  overflow-x: hidden;
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0A0A0A 0%, #1A1A1A 100%);
 }
 
-/* Mobile-first responsive improvements */
-@media (max-width: 640px) {
-  /* Reduce padding on mobile for better space utilization */
-  .max-w-7xl {
-    padding-left: 1rem;
-    padding-right: 1rem;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid #00953B;
+  outline-offset: 2px;
+}
+
+/* Button base styles */
+button {
+  cursor: pointer;
+  user-select: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Card styles */
+.card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #00953B 0%, #FFDD00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pulse animation for active states */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 149, 59, 0.7);
   }
-  
-  /* Optimize scrollable areas for mobile */
-  [role="list"] {
-    -webkit-overflow-scrolling: touch;
+  50% {
+    box-shadow: 0 0 0 10px rgba(0, 149, 59, 0);
   }
 }
 
-/* Tablet optimizations */
-@media (min-width: 768px) and (max-width: 1024px) {
-  /* Ensure proper spacing in tablet two-column layout */
-  .lg\:grid-cols-2 {
-    gap: 1.5rem;
+.pulse-glow {
+  animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Spotify-style progress bar */
+.progress-bar {
+  position: relative;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00953B 0%, #FFDD00 100%);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Hover lift effect */
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Text shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
   }
 }
 
-/* Portrait orientation optimizations */
-@media (orientation: portrait) {
-  /* Maximize vertical space usage */
-  main {
-    min-height: calc(100vh - 200px);
-  }
-  
-  /* Optimize scrollable content areas */
-  [role="list"] {
-    max-height: 60vh;
-  }
-}
-
-/* Landscape orientation optimizations */
-@media (orientation: landscape) and (max-height: 600px) {
-  /* Reduce vertical padding in landscape on small screens */
-  header {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-  
-  nav {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
-  
-  main {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
 }

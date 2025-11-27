@@ -29,22 +29,17 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
     const [detectedPickupLine, setDetectedPickupLine] = useState<PickupLine | null>(null);
     const [isListening, setIsListening] = useState(false);
 
-    // Expose methods to parent components via ref
     useImperativeHandle(ref, () => ({
       setDetectedPickupLine,
       isSessionActive: () => isSessionActive,
     }));
 
-    // Set up transcription callback
     useEffect(() => {
       transcriptionService.onTranscription((text, speaker) => {
         console.log(`Transcription from ${speaker}:`, text);
-        // TODO: Process transcription (match pickup lines, detect outcomes)
-        // This will be handled by the session manager in a future update
       });
     }, [transcriptionService]);
 
-    // Clean up transcription service on unmount
     useEffect(() => {
       return () => {
         if (isListening) {
@@ -59,7 +54,6 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       setIsSessionActive(true);
       setDetectedPickupLine(null);
       
-      // Start listening for audio
       await transcriptionService.startListening();
       setIsListening(true);
       
@@ -73,7 +67,6 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
 
   const handleEndCall = async () => {
     try {
-      // Stop listening
       if (isListening) {
         await transcriptionService.stopListening();
         setIsListening(false);
@@ -91,70 +84,103 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
   };
 
   return (
-    <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-white rounded-xl sm:rounded-2xl shadow-sm">
-      {/* Session Status Indicator */}
-      <div className="flex items-center justify-between mb-4 sm:mb-6">
-        <div className="flex items-center gap-2 sm:gap-3">
+    <div className="glass p-6 sm:p-8 rounded-2xl border border-white/10 hover-lift">
+      {/* Session Status */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
           <div 
             className="relative" 
             role="status" 
             aria-live="polite"
             aria-label={isSessionActive ? 'Call session is active' : 'Ready to start call'}
           >
-            {isSessionActive && (
+            {isSessionActive ? (
               <>
-                {/* Pulsing dot animation */}
-                <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" aria-hidden="true" />
-                <div className="relative w-3 h-3 rounded-full bg-green-500" aria-hidden="true" />
+                <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" aria-hidden="true" />
+                <div className="relative w-4 h-4 rounded-full bg-primary shadow-glow-primary" aria-hidden="true" />
               </>
-            )}
-            {!isSessionActive && (
-              <div className="w-3 h-3 rounded-full bg-gray-300" aria-hidden="true" />
+            ) : (
+              <div className="w-4 h-4 rounded-full bg-white/20" aria-hidden="true" />
             )}
           </div>
-          <span className="text-xs sm:text-sm font-medium text-gray-700" aria-hidden="true">
-            {isSessionActive ? 'Call Active' : 'Ready'}
-          </span>
+          <div>
+            <span className="text-sm font-semibold text-white block" aria-hidden="true">
+              {isSessionActive ? 'Live Call' : 'Ready'}
+            </span>
+            {isSessionActive && (
+              <span className="text-xs text-white/60">Recording in progress</span>
+            )}
+          </div>
         </div>
+        
+        {isSessionActive && (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-xs font-medium text-primary">REC</span>
+          </div>
+        )}
       </div>
 
-      {/* Start/End Call Button */}
+      {/* Main Action Button */}
       <button
         onClick={isSessionActive ? handleEndCall : handleStartCall}
         className={`
-          w-full py-4 sm:py-5 px-6 rounded-xl font-semibold text-base sm:text-lg
-          transition-all duration-200 ease-in-out
+          w-full py-5 px-6 rounded-xl font-bold text-lg
+          transition-all duration-300 ease-out
           focus:outline-none focus:ring-4 focus:ring-opacity-50
-          min-h-[44px] touch-manipulation
+          min-h-[60px] touch-manipulation
+          relative overflow-hidden group
           ${
             isSessionActive
-              ? 'bg-red-500 hover:bg-red-600 active:bg-red-700 text-white focus:ring-red-300'
-              : 'bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white focus:ring-blue-300'
+              ? 'bg-gradient-to-r from-error to-red-600 hover:from-red-600 hover:to-error text-white focus:ring-error shadow-hard'
+              : 'bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white focus:ring-primary shadow-glow-primary'
           }
         `}
         aria-label={isSessionActive ? 'End current call session' : 'Start new call session'}
         aria-pressed={isSessionActive}
       >
-        {isSessionActive ? 'End Call' : 'Start Call'}
+        <span className="relative z-10 flex items-center justify-center gap-3">
+          <span className="text-2xl">{isSessionActive ? '⏹️' : '▶️'}</span>
+          <span>{isSessionActive ? 'End Call' : 'Start Call'}</span>
+        </span>
+        <div className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
       </button>
 
-      {/* Detected Pickup Line Display */}
+      {/* Detected Pickup Line */}
       {detectedPickupLine && (
         <div 
-          className="mt-4 sm:mt-6 p-3 sm:p-4 bg-blue-50 rounded-xl border border-blue-200"
+          className="mt-6 p-4 glass rounded-xl border border-primary/30 animate-scale-in"
           role="status"
           aria-live="polite"
           aria-label={`Detected opener: ${detectedPickupLine.text}`}
         >
-          <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">
-            Detected Opener
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+              <span className="text-xl">✨</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">
+                Detected Opener
+              </p>
+              <p className="text-sm text-white font-medium leading-relaxed">
+                {detectedPickupLine.text}
+              </p>
+              {detectedPickupLine.category && (
+                <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-white/80 bg-white/10 rounded-md">
+                  {detectedPickupLine.category}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tips when not active */}
+      {!isSessionActive && !detectedPickupLine && (
+        <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10">
+          <p className="text-sm text-white/60 text-center">
+            Click Start Call to begin practicing your opening lines
           </p>
-          <p className="text-sm sm:text-base text-gray-800">{detectedPickupLine.text}</p>
-          {detectedPickupLine.category && (
-            <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-md">
-              {detectedPickupLine.category}
-            </span>
-          )}
         </div>
       )}
     </div>

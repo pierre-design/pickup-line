@@ -61,7 +61,6 @@ function App() {
   // Keyboard navigation for tabs
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Only handle keyboard navigation when focus is on tab buttons
       const target = event.target as HTMLElement;
       if (target.getAttribute('role') !== 'tab') return;
 
@@ -107,33 +106,26 @@ function App() {
     }
 
     try {
-      // Simulate outcome classification (in real app, this would come from audio analysis)
-      // For now, we'll randomly determine outcome for demonstration
       const outcome: 'stayed' | 'left' = Math.random() > 0.5 ? 'stayed' : 'left';
       
       sessionManager.recordOutcome(outcome);
       const result = sessionManager.endSession();
 
-      // Update statistics
       if (currentSession.pickupLineUsed) {
         await performanceAnalyzer.updateStatistics(currentSession.pickupLineUsed, outcome);
         const updatedStats = performanceAnalyzer.getAllStatistics();
         setStatistics(updatedStats);
       }
 
-      // Show feedback
       setFeedback(result.feedback);
 
-      // Show celebration if positive outcome
       if (result.feedback.showCelebration) {
         setShowCelebration(true);
       }
 
-      // Clear current session
       setCurrentSession(null);
     } catch (error) {
       console.error('Error ending session:', error);
-      // Show error feedback
       setFeedback({
         type: 'negative',
         message: 'An error occurred while processing the call. Please try again.',
@@ -142,148 +134,177 @@ function App() {
     }
   };
 
-  // Handle feedback dismissal
   const handleDismissFeedback = () => {
     setFeedback(null);
   };
 
-  // Handle celebration dismissal
   const handleDismissCelebration = () => {
     setShowCelebration(false);
   };
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50">
-        {/* Skip to main content link for keyboard navigation */}
+      <div className="min-h-screen bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900">
+        {/* Skip to main content */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-lg focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-lg focus:shadow-glow-primary"
         >
           Skip to main content
         </a>
 
-        {/* Header */}
-        <header className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-              Pickup Line Coach
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-600 mt-1">
-              Improve your call opening techniques with real-time feedback
-            </p>
+        {/* Header with glassmorphism */}
+        <header className="glass border-b border-white/10 sticky top-0 z-40 backdrop-blur-xl">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">
+                  <span className="gradient-text">Pickup Line Coach</span>
+                </h1>
+                <p className="text-sm sm:text-base text-white/60">
+                  Master your call opening techniques
+                </p>
+              </div>
+              
+              {/* Stats badge */}
+              <div className="hidden sm:flex items-center gap-4">
+                <div className="glass px-4 py-2 rounded-xl">
+                  <div className="text-xs text-white/60">Total Calls</div>
+                  <div className="text-xl font-bold text-white">
+                    {statistics.reduce((sum, stat) => sum + stat.totalUses, 0)}
+                  </div>
+                </div>
+                <div className="glass px-4 py-2 rounded-xl">
+                  <div className="text-xs text-white/60">Success Rate</div>
+                  <div className="text-xl font-bold text-primary">
+                    {statistics.length > 0
+                      ? Math.round(
+                          (statistics.reduce((sum, stat) => sum + stat.successfulUses, 0) /
+                            statistics.reduce((sum, stat) => sum + stat.totalUses, 0)) *
+                            100
+                        ) || 0
+                      : 0}
+                    %
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </header>
 
-        {/* Navigation Tabs */}
-        <nav className="bg-white border-b border-gray-200 overflow-x-auto" aria-label="Main navigation">
+        {/* Navigation Tabs - Spotify style */}
+        <nav className="glass border-b border-white/10 sticky top-[88px] sm:top-[104px] z-30 backdrop-blur-xl" aria-label="Main navigation">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex space-x-4 sm:space-x-8" role="tablist">
-              <button
-                onClick={() => setActiveTab('control')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                  activeTab === 'control'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                role="tab"
-                aria-selected={activeTab === 'control'}
-                aria-controls="control-panel"
-                id="control-tab"
-              >
-                Call Control
-              </button>
-              <button
-                onClick={() => setActiveTab('performance')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                  activeTab === 'performance'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                role="tab"
-                aria-selected={activeTab === 'performance'}
-                aria-controls="performance-panel"
-                id="performance-tab"
-              >
-                Performance
-              </button>
-              <button
-                onClick={() => setActiveTab('library')}
-                className={`py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-                  activeTab === 'library'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                role="tab"
-                aria-selected={activeTab === 'library'}
-                aria-controls="library-panel"
-                id="library-tab"
-              >
-                Library
-              </button>
+            <div className="flex gap-2 sm:gap-4" role="tablist">
+              {[
+                { id: 'control', label: 'Control', icon: '🎙️' },
+                { id: 'performance', label: 'Performance', icon: '📊' },
+                { id: 'library', label: 'Library', icon: '📚' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as typeof activeTab)}
+                  className={`
+                    relative py-3 sm:py-4 px-4 sm:px-6 font-medium text-sm sm:text-base
+                    transition-all duration-200 rounded-t-lg
+                    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-dark-900
+                    ${
+                      activeTab === tab.id
+                        ? 'text-white bg-white/5'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    }
+                  `}
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  aria-controls={`${tab.id}-panel`}
+                  id={`${tab.id}-tab`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-lg">{tab.icon}</span>
+                    <span className="hidden sm:inline">{tab.label}</span>
+                  </span>
+                  {activeTab === tab.id && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-secondary" />
+                  )}
+                </button>
+              ))}
             </div>
           </div>
         </nav>
 
         {/* Main Content */}
-        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
-          {activeTab === 'control' && (
-            <div 
-              className="space-y-4 sm:space-y-6 lg:space-y-8 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0" 
-              role="tabpanel" 
-              id="control-panel" 
-              aria-labelledby="control-tab"
-            >
-              <div className="lg:col-span-1">
-                <CallControlPanel
-                  ref={callControlRef}
-                  sessionManager={sessionManager}
-                  transcriptionService={transcriptionService}
-                  onSessionStart={handleSessionStart}
-                  onSessionEnd={handleSessionEnd}
-                />
-              </div>
-              
-              {/* Instructions and Service Info */}
-              <div className="lg:col-span-1 max-w-md mx-auto lg:mx-0 space-y-4">
-                {/* Transcription Service Info */}
-                <TranscriptionServiceInfo />
+        <main id="main-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <div className="animate-fade-in">
+            {activeTab === 'control' && (
+              <div 
+                className="space-y-6 lg:grid lg:grid-cols-2 lg:gap-8 lg:space-y-0" 
+                role="tabpanel" 
+                id="control-panel" 
+                aria-labelledby="control-tab"
+              >
+                <div className="lg:col-span-1 animate-slide-up">
+                  <CallControlPanel
+                    ref={callControlRef}
+                    sessionManager={sessionManager}
+                    transcriptionService={transcriptionService}
+                    onSessionStart={handleSessionStart}
+                    onSessionEnd={handleSessionEnd}
+                  />
+                </div>
                 
-                {/* Instructions */}
-                <div className="p-4 sm:p-6 bg-blue-50 rounded-xl border border-blue-200">
-                  <h3 className="text-base sm:text-lg font-semibold text-blue-900 mb-2">
-                    How to use
-                  </h3>
-                  <ol className="text-xs sm:text-sm text-blue-800 space-y-2 list-decimal list-inside">
-                    <li>Click "Start Call" to begin a new session</li>
-                    <li>Use one of the pickup lines from the library</li>
-                    <li>Click "End Call" when the conversation concludes</li>
-                    <li>Review your feedback and track your performance</li>
-                  </ol>
+                <div className="lg:col-span-1 space-y-4 animate-slide-up" style={{ animationDelay: '0.1s' }}>
+                  <TranscriptionServiceInfo />
+                  
+                  <div className="glass p-6 rounded-2xl border border-white/10">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                      <span>💡</span>
+                      <span>Quick Guide</span>
+                    </h3>
+                    <ol className="text-sm text-white/80 space-y-3">
+                      <li className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">1</span>
+                        <span>Click "Start Call" to begin a new session</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">2</span>
+                        <span>Use one of the pickup lines from the library</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">3</span>
+                        <span>Click "End Call" when the conversation concludes</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">4</span>
+                        <span>Review your feedback and track your performance</span>
+                      </li>
+                    </ol>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {activeTab === 'performance' && (
-            <div 
-              role="tabpanel" 
-              id="performance-panel" 
-              aria-labelledby="performance-tab"
-            >
-              <PerformanceDashboard statistics={statistics} />
-            </div>
-          )}
+            {activeTab === 'performance' && (
+              <div 
+                className="animate-slide-up"
+                role="tabpanel" 
+                id="performance-panel" 
+                aria-labelledby="performance-tab"
+              >
+                <PerformanceDashboard statistics={statistics} />
+              </div>
+            )}
 
-          {activeTab === 'library' && (
-            <div 
-              role="tabpanel" 
-              id="library-panel" 
-              aria-labelledby="library-tab"
-            >
-              <PickupLineLibrary statistics={statistics} />
-            </div>
-          )}
+            {activeTab === 'library' && (
+              <div 
+                className="animate-slide-up"
+                role="tabpanel" 
+                id="library-panel" 
+                aria-labelledby="library-tab"
+              >
+                <PickupLineLibrary statistics={statistics} />
+              </div>
+            )}
+          </div>
         </main>
 
         {/* Feedback Card */}
