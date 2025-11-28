@@ -97,7 +97,7 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
         className={`
           w-full py-4 px-6 rounded-2xl font-extrabold text-lg
           transition-all duration-200
-          focus:outline-none focus:ring-2 focus:ring-yellow
+          focus:outline-none focus:ring-2 focus:ring-pink
           min-h-[60px] touch-manipulation
           ${
             isSessionActive
