@@ -174,10 +174,10 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
               
               {/* Text */}
               <div>
-                <p className="text-lg font-bold text-gray-900 mb-1">
+                <p className="text-lg font-bold text-black mb-1">
                   Finding your best pickup line
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-700">
                   Analyzing performance data...
                 </p>
               </div>
