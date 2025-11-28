@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import { SmartRecommendationEngine } from '../services/recommendationEngine';
 import type { PickupLineStatistics } from '../domain/types';
+import { PICKUP_LINES } from '../domain/pickupLines';
 
 interface PickupLineCarouselProps {
   statistics?: PickupLineStatistics[];
@@ -11,7 +12,9 @@ const recommendationEngine = new SmartRecommendationEngine();
 
 export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isUpdatingRecommendation, setIsUpdatingRecommendation] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const previousRecommendedIdRef = useRef<string | null>(null);
 
   // Function to render text with handlebars as grey text
   const renderTextWithPlaceholders = (text: string) => {
@@ -38,11 +41,51 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
     );
   };
 
-  // Get smart recommendation and sorted lines
+  // Get smart recommendation but keep original order
   const recommendation = recommendationEngine.getRecommendation(statistics);
-  const sortedLines = recommendationEngine.getSortedPickupLines(statistics);
   const recommendedId = recommendation.recommendedLine.id;
   const recommendationExplanation = recommendationEngine.getRecommendationExplanation(recommendation);
+  
+  // Use original PICKUP_LINES order instead of sorted
+  const lines = PICKUP_LINES;
+
+  // Auto-scroll to recommended pickup line when recommendation changes
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Check if recommendation changed
+    if (previousRecommendedIdRef.current !== null && previousRecommendedIdRef.current !== recommendedId) {
+      // Show loading indicator
+      setIsUpdatingRecommendation(true);
+      
+      // Find the index of the recommended line
+      const recommendedIndex = lines.findIndex(line => line.id === recommendedId);
+      
+      if (recommendedIndex !== -1) {
+        // Smooth scroll to the recommended line after a brief delay
+        setTimeout(() => {
+          const itemWidth = container.scrollWidth / lines.length;
+          const scrollLeft = recommendedIndex * itemWidth;
+          
+          container.scrollTo({
+            left: scrollLeft,
+            behavior: 'smooth'
+          });
+          
+          // Hide loading indicator after scroll completes
+          setTimeout(() => {
+            setIsUpdatingRecommendation(false);
+          }, 800);
+        }, 1000);
+      } else {
+        setIsUpdatingRecommendation(false);
+      }
+    }
+    
+    // Update previous recommendation reference
+    previousRecommendedIdRef.current = recommendedId;
+  }, [recommendedId, lines]);
 
   // Track scroll position to update active dot
   useEffect(() => {
@@ -51,14 +94,14 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
 
     const handleScroll = () => {
       const scrollLeft = container.scrollLeft;
-      const itemWidth = container.scrollWidth / sortedLines.length;
+      const itemWidth = container.scrollWidth / lines.length;
       const index = Math.round(scrollLeft / itemWidth);
-      setActiveIndex(Math.min(index, sortedLines.length - 1));
+      setActiveIndex(Math.min(index, lines.length - 1));
     };
 
     container.addEventListener('scroll', handleScroll);
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [sortedLines.length]);
+  }, [lines.length]);
 
   return (
     <div className="w-full max-w-2xl">
@@ -68,8 +111,8 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
         className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 md:mx-0"
         style={{ scrollPaddingLeft: '1.5rem', scrollPaddingRight: '1.5rem' }}
       >
-        <div className="flex gap-4 pb-4 pl-6 pr-12 md:px-0">
-          {sortedLines.map((line) => {
+        <div className="flex gap-4 pb-4 pl-6 pr-6 md:px-0">
+          {lines.map((line) => {
             const isRecommended = line.id === recommendedId;
             
             return (
@@ -106,7 +149,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
       
       {/* Scroll Indicator Dots - iOS style with smooth stretch animation */}
       <div className="flex justify-center gap-2 mt-4">
-        {sortedLines.map((_, index) => (
+        {lines.map((_, index) => (
           <div
             key={index}
             style={{
@@ -120,6 +163,28 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
           />
         ))}
       </div>
+
+      {/* Recommendation Update Loading Modal */}
+      {isUpdatingRecommendation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full shadow-2xl">
+            <div className="flex items-center gap-4">
+              {/* Spinner */}
+              <div className="w-8 h-8 border-3 border-light-green border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+              
+              {/* Text */}
+              <div>
+                <p className="text-lg font-bold text-gray-900 mb-1">
+                  Finding your best pickup line
+                </p>
+                <p className="text-sm text-gray-600">
+                  Analyzing performance data...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
