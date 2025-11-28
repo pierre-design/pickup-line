@@ -14,7 +14,7 @@ export const PICKUP_LINES: PickupLine[] = [
   },
   {
     id: 'pl-3',
-    text: "Hello, I’m {your name}. You wanted more information about Dis-Chem Life. Is now a good time to talk about how our cover can help you save more at Dis-Chem?",
+    text: "Hello, I'm {your name}. You wanted to find out more about Dis-Chem Life. Is now a good time to talk about how you can save more at Dis-Chem?",
     category: 'engagement',
   },
   {
@@ -29,7 +29,7 @@ export const PICKUP_LINES: PickupLine[] = [
   },
   {
     id: 'pl-6',
-    text: "Good morning, it's {your name} from Dis-Chem Life. How are you today? I'm also well, thank you. Do you have five minutes to talk about the cover you asked about?",
+    text: "Hello, it's {your name} from Dis-Chem Life. How are you today? I'm also well, thank you. Do you have a couple of minutes to talk about the funeral cover?",
     category: 'traditional',
   },
   {
