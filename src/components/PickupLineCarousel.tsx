@@ -1,47 +1,48 @@
 import { useState, useRef, useEffect } from 'react';
-import { PICKUP_LINES } from '../domain/pickupLines';
+
+import { SmartRecommendationEngine } from '../services/recommendationEngine';
+import type { PickupLineStatistics } from '../domain/types';
 
 interface PickupLineCarouselProps {
-  statistics?: Array<{ pickupLineId: string; successRate: number }>;
+  statistics?: PickupLineStatistics[];
 }
+
+const recommendationEngine = new SmartRecommendationEngine();
 
 export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Function to render text with name chips
-  const renderTextWithChips = (text: string) => {
-    const parts = text.split('{your name}');
+  // Function to render text with handlebars as grey text
+  const renderTextWithPlaceholders = (text: string) => {
+    // Split on any text within curly braces
+    const parts = text.split(/(\{[^}]+\})/);
     
     return (
       <>
-        {parts.map((part, index) => (
-          <span key={index}>
-            {part}
-            {index < parts.length - 1 && (
-              <span className="inline-flex items-baseline px-2 py-1 mx-1 text-sm font-medium bg-light-green/70 text-black rounded-md">
-                your name
+        {parts.map((part, index) => {
+          // Check if this part is a placeholder (within curly braces)
+          if (part.startsWith('{') && part.endsWith('}')) {
+            // Remove the braces and render as grey text
+            const placeholderText = part.slice(1, -1);
+            return (
+              <span key={index} className="text-gray-500">
+                {placeholderText}
               </span>
-            )}
-          </span>
-        ))}
+            );
+          }
+          // Regular text
+          return <span key={index}>{part}</span>;
+        })}
       </>
     );
   };
 
-  // Find the top performing pickup line
-  const topPerformerId = statistics.length > 0
-    ? statistics.reduce((top, current) => 
-        current.successRate > top.successRate ? current : top
-      ).pickupLineId
-    : null;
-
-  // Sort pickup lines: top performer first, then the rest
-  const sortedLines = [...PICKUP_LINES].sort((a, b) => {
-    if (a.id === topPerformerId) return -1;
-    if (b.id === topPerformerId) return 1;
-    return 0;
-  });
+  // Get smart recommendation and sorted lines
+  const recommendation = recommendationEngine.getRecommendation(statistics);
+  const sortedLines = recommendationEngine.getSortedPickupLines(statistics);
+  const recommendedId = recommendation.recommendedLine.id;
+  const recommendationExplanation = recommendationEngine.getRecommendationExplanation(recommendation);
 
   // Track scroll position to update active dot
   useEffect(() => {
@@ -69,7 +70,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
       >
         <div className="flex gap-4 pb-4 pl-6 pr-12 md:px-0">
           {sortedLines.map((line) => {
-            const isTopPerformer = line.id === topPerformerId;
+            const isRecommended = line.id === recommendedId;
             
             return (
               <div
@@ -78,9 +79,12 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
               >
                 <div className="bg-white rounded-2xl shadow-lg h-[320px] flex flex-col items-start relative p-6">
                   {/* Recommended Badge */}
-                  {isTopPerformer && (
+                  {isRecommended && (
                     <div className="absolute top-6 right-6">
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-light-green text-black">
+                      <span 
+                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-light-green text-black"
+                        title={recommendationExplanation}
+                      >
                         Recommended
                       </span>
                     </div>
@@ -91,7 +95,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
                     className="text-2xl sm:text-3xl font-bold leading-snug text-left" 
                     style={{ color: '#000000' }}
                   >
-                    {renderTextWithChips(line.text)}
+                    {renderTextWithPlaceholders(line.text)}
                   </p>
                 </div>
               </div>

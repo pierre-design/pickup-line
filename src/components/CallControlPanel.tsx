@@ -2,6 +2,7 @@ import { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
 import type { CallSession, PickupLine } from '../domain/types';
 import type { CallSessionManager } from '../services/interfaces';
 import type { AudioTranscriptionService } from '../infrastructure/interfaces';
+import { PickupLineMatcher } from '../domain/pickupLineMatcher';
 
 interface CallControlPanelProps {
   sessionManager: CallSessionManager;
@@ -28,6 +29,7 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
     const [isSessionActive, setIsSessionActive] = useState(false);
     const [detectedPickupLine, setDetectedPickupLine] = useState<PickupLine | null>(null);
     const [isListening, setIsListening] = useState(false);
+    const [pickupLineMatcher] = useState(() => new PickupLineMatcher());
 
     useImperativeHandle(ref, () => ({
       setDetectedPickupLine,
@@ -37,8 +39,25 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
     useEffect(() => {
       transcriptionService.onTranscription((text, speaker) => {
         console.log(`Transcription from ${speaker}:`, text);
+        
+        // Only process agent transcriptions for pickup line detection
+        if (speaker === 'agent' && isSessionActive && !detectedPickupLine) {
+          const matchedPickupLine = pickupLineMatcher.match(text);
+          if (matchedPickupLine) {
+            console.log('Detected pickup line:', matchedPickupLine.id);
+            setDetectedPickupLine(matchedPickupLine);
+            
+            // Record the pickup line in the session
+            try {
+              sessionManager.recordOpener(matchedPickupLine);
+              console.log('Pickup line recorded in session');
+            } catch (error) {
+              console.error('Failed to record pickup line:', error);
+            }
+          }
+        }
       });
-    }, [transcriptionService]);
+    }, [transcriptionService, isSessionActive, detectedPickupLine, pickupLineMatcher, sessionManager]);
 
     useEffect(() => {
       return () => {

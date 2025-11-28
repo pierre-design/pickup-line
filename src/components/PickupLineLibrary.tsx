@@ -150,22 +150,27 @@ function PickupLineCard({
 }: PickupLineCardProps) {
   const successRatePercentage = statistics ? statistics.successRate * 100 : 0;
 
-  // Function to render text with name chips
-  const renderTextWithChips = (text: string) => {
-    const parts = text.split('{your name}');
+  // Function to render text with handlebars as grey text
+  const renderTextWithPlaceholders = (text: string) => {
+    // Split on any text within curly braces
+    const parts = text.split(/(\{[^}]+\})/);
     
     return (
       <>
-        {parts.map((part, index) => (
-          <span key={index}>
-            {part}
-            {index < parts.length - 1 && (
-              <span className="inline-flex items-baseline px-2 py-1 mx-1 text-xs font-medium bg-light-green/70 text-black rounded-md">
-                your name
+        {parts.map((part, index) => {
+          // Check if this part is a placeholder (within curly braces)
+          if (part.startsWith('{') && part.endsWith('}')) {
+            // Remove the braces and render as grey text
+            const placeholderText = part.slice(1, -1);
+            return (
+              <span key={index} className="text-gray-500">
+                {placeholderText}
               </span>
-            )}
-          </span>
-        ))}
+            );
+          }
+          // Regular text
+          return <span key={index}>{part}</span>;
+        })}
       </>
     );
   };
@@ -196,7 +201,7 @@ function PickupLineCard({
 
       {/* Pickup Line Text */}
       <p className={`text-xs sm:text-sm font-medium leading-relaxed mb-2 sm:mb-3 break-words ${isExcluded ? 'text-gray-500' : 'text-gray-900'}`}>
-        {renderTextWithChips(pickupLine.text)}
+        {renderTextWithPlaceholders(pickupLine.text)}
       </p>
 
       {/* Success Rate Badge and Excluded Indicator */}

@@ -5,13 +5,21 @@ import type { PickupLineStatistics } from '../domain/types';
 import { PICKUP_LINES } from '../domain/pickupLines';
 
 describe('PickupLineLibrary', () => {
-  it('should render all 15 pickup lines', () => {
+  it('should render all 7 pickup lines', () => {
     render(<PickupLineLibrary statistics={[]} />);
     
-    // Check that all pickup lines are rendered
-    PICKUP_LINES.forEach(line => {
-      expect(screen.getByText(line.text)).toBeInTheDocument();
-    });
+    // Check that all pickup lines are rendered by counting the buttons
+    const pickupLineButtons = screen.getAllByRole('listitem');
+    expect(pickupLineButtons).toHaveLength(7);
+    
+    // Check that each category is present
+    expect(screen.getByText('rewarding')).toBeInTheDocument();
+    expect(screen.getByText('helpful')).toBeInTheDocument();
+    expect(screen.getByText('engagement')).toBeInTheDocument();
+    expect(screen.getByText('answers')).toBeInTheDocument();
+    expect(screen.getByText('savings')).toBeInTheDocument();
+    expect(screen.getByText('traditional')).toBeInTheDocument();
+    expect(screen.getByText('short')).toBeInTheDocument();
   });
 
   it('should show success rate badge for lines with >= 5 uses', () => {
@@ -83,8 +91,8 @@ describe('PickupLineLibrary', () => {
     // Initially, detailed stats should not be visible
     expect(screen.queryByText('Total Uses:')).not.toBeInTheDocument();
     
-    // Click on the pickup line
-    const pickupLineButton = screen.getByText(PICKUP_LINES[0].text);
+    // Click on the pickup line (use partial text match since text is split across spans)
+    const pickupLineButton = screen.getByText(/Hi, thank you for requesting a callback/);
     fireEvent.click(pickupLineButton);
     
     // Detailed stats should now be visible
@@ -113,7 +121,7 @@ describe('PickupLineLibrary', () => {
 
     render(<PickupLineLibrary statistics={statistics} />);
     
-    const pickupLineButton = screen.getByText(PICKUP_LINES[0].text);
+    const pickupLineButton = screen.getByText(/Hi, thank you for requesting a callback/);
     
     // Click to show details
     fireEvent.click(pickupLineButton);
@@ -130,7 +138,7 @@ describe('PickupLineLibrary', () => {
     render(<PickupLineLibrary statistics={[]} onSelectPickupLine={onSelectPickupLine} />);
     
     // Click on the first pickup line
-    const pickupLineButton = screen.getByText(PICKUP_LINES[0].text);
+    const pickupLineButton = screen.getByText(/Hi, thank you for requesting a callback/);
     fireEvent.click(pickupLineButton);
     
     // Callback should be called with the pickup line
@@ -142,7 +150,7 @@ describe('PickupLineLibrary', () => {
     
     // All lines should show "Not used yet"
     const notUsedElements = screen.getAllByText('Not used yet');
-    expect(notUsedElements).toHaveLength(15);
+    expect(notUsedElements).toHaveLength(7);
   });
 
   it('should display category tags for all pickup lines', () => {
@@ -171,7 +179,7 @@ describe('PickupLineLibrary', () => {
     render(<PickupLineLibrary statistics={statistics} onSelectPickupLine={onSelectPickupLine} />);
     
     // Click on the excluded line
-    const pickupLineButton = screen.getByText(PICKUP_LINES[0].text);
+    const pickupLineButton = screen.getByText(/Hi, thank you for requesting a callback/);
     fireEvent.click(pickupLineButton);
     
     // Should still be selectable

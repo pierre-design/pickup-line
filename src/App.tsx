@@ -114,16 +114,18 @@ function App() {
 
       // Update statistics if a pickup line was used
       if (currentSession.pickupLineUsed) {
+        console.log('Updating statistics for pickup line:', currentSession.pickupLineUsed, 'outcome:', outcome);
         try {
           await performanceAnalyzer.updateStatistics(currentSession.pickupLineUsed, outcome);
           const updatedStats = performanceAnalyzer.getAllStatistics();
           setStatistics(updatedStats);
+          console.log('Statistics updated successfully:', updatedStats);
         } catch (statsError) {
           console.error('Error updating statistics:', statsError);
           // Continue anyway - don't fail the whole operation
         }
       } else {
-        console.log('No pickup line was used in this session');
+        console.log('No pickup line was used in this session - statistics will not be updated');
       }
 
       // Show feedback
