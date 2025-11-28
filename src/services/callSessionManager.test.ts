@@ -93,12 +93,12 @@ describe('DefaultCallSessionManager', () => {
       }).toThrow('No active session. Call startSession() first.');
     });
 
-    it('should throw error if no pickup line was recorded', () => {
+    it('should allow recording outcome without pickup line', () => {
       manager.startSession();
 
       expect(() => {
         manager.recordOutcome('stayed');
-      }).toThrow('No pickup line recorded. Call recordOpener() first.');
+      }).not.toThrow();
     });
   });
 
@@ -155,12 +155,12 @@ describe('DefaultCallSessionManager', () => {
       }).toThrow('No active session. Call startSession() first.');
     });
 
-    it('should throw error if no pickup line was recorded', () => {
+    it('should throw error if no outcome was recorded (pickup line optional)', () => {
       manager.startSession();
 
       expect(() => {
         manager.endSession();
-      }).toThrow('No pickup line recorded. Call recordOpener() first.');
+      }).toThrow('No outcome recorded. Call recordOutcome() first.');
     });
 
     it('should throw error if no outcome was recorded', () => {
@@ -292,14 +292,14 @@ describe('DefaultCallSessionManager - Error Handling', () => {
       expect(session?.outcome).toBe('stayed');
     });
 
-    it('should return false when manual outcome recording fails', () => {
+    it('should return true when manual outcome recording succeeds (no opener needed)', () => {
       manager.startSession();
-      // No opener recorded
+      // No opener recorded - but that's OK now
       const result = manager.recordOutcomeManually('stayed');
       
-      expect(result).toBe(false);
+      expect(result).toBe(true);
       const errors = manager.getSessionErrors();
-      expect(errors.length).toBeGreaterThan(0);
+      expect(errors.length).toBe(0);
     });
   });
 
@@ -368,14 +368,14 @@ describe('DefaultCallSessionManager - Error Handling', () => {
       expect(options.needsOutcome).toBe(false);
     });
 
-    it('should indicate opener needed', () => {
+    it('should indicate only outcome needed (opener optional)', () => {
       manager.startSession();
       
       const options = manager.getRecoveryOptions();
       
       expect(options.canRecover).toBe(true);
-      expect(options.needsOpener).toBe(true);
-      expect(options.needsOutcome).toBe(true); // Both are needed when session just starts
+      expect(options.needsOpener).toBe(false); // Opener is now optional
+      expect(options.needsOutcome).toBe(true); // Only outcome is required
     });
 
     it('should indicate outcome needed', () => {

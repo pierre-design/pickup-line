@@ -91,7 +91,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
   /**
    * Record the outcome of the current session
    * Calculates call duration and sets end time
-   * @throws SessionError if no active session exists or no pickup line was recorded
+   * @throws SessionError if no active session exists
    */
   recordOutcome(outcome: 'stayed' | 'left'): void {
     if (!this.currentSession) {
@@ -101,13 +101,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
       );
     }
 
-    if (!this.currentSession.pickupLineUsed) {
-      throw new SessionError(
-        'No pickup line recorded. Call recordOpener() first.',
-        'NO_OPENER_RECORDED'
-      );
-    }
-
+    // Allow recording outcome even without a pickup line (for manual testing)
     this.currentSession.outcome = outcome;
     this.currentSession.endTime = new Date();
   }
@@ -132,20 +126,13 @@ export class DefaultCallSessionManager implements CallSessionManager {
    * End the current session
    * Generates feedback, saves session to repository, and returns the result
    * Handles errors gracefully and supports offline mode
-   * @throws SessionError if no active session exists, no pickup line was recorded, or no outcome was recorded
+   * @throws SessionError if no active session exists or no outcome was recorded
    */
   endSession(): CallSessionResult {
     if (!this.currentSession) {
       throw new SessionError(
         'No active session. Call startSession() first.',
         'NO_ACTIVE_SESSION'
-      );
-    }
-
-    if (!this.currentSession.pickupLineUsed) {
-      throw new SessionError(
-        'No pickup line recorded. Call recordOpener() first.',
-        'NO_OPENER_RECORDED'
       );
     }
 
@@ -156,18 +143,28 @@ export class DefaultCallSessionManager implements CallSessionManager {
       );
     }
 
-    // Generate feedback
-    const pickupLine: PickupLine = {
-      id: this.currentSession.pickupLineUsed,
-      text: '', // Will be populated by FeedbackGenerator from its internal library
-    };
-
+    // Generate feedback - handle case where no pickup line was used
     let feedback: Feedback;
     try {
-      feedback = this.feedbackGenerator.generateFeedback(
-        this.currentSession.outcome,
-        pickupLine
-      );
+      if (this.currentSession.pickupLineUsed) {
+        const pickupLine: PickupLine = {
+          id: this.currentSession.pickupLineUsed,
+          text: '', // Will be populated by FeedbackGenerator from its internal library
+        };
+        feedback = this.feedbackGenerator.generateFeedback(
+          this.currentSession.outcome,
+          pickupLine
+        );
+      } else {
+        // No pickup line was used - provide generic feedback
+        feedback = {
+          type: (this.currentSession.outcome === 'stayed' ? 'positive' : 'negative') as 'positive' | 'negative',
+          message: this.currentSession.outcome === 'stayed' 
+            ? 'Great job! The client stayed on the call.'
+            : 'The client left the call. Keep practicing!',
+          showCelebration: this.currentSession.outcome === 'stayed',
+        };
+      }
     } catch (error) {
       console.error('Failed to generate feedback:', error);
       // Provide default feedback if generation fails
@@ -258,7 +255,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
 
   /**
    * Attempt to recover from an invalid state
-   * Prompts for manual input if opener is missing
+   * Prompts for manual input if outcome is missing
    * @returns Object indicating what manual input is needed
    */
   getRecoveryOptions(): {
@@ -270,13 +267,14 @@ export class DefaultCallSessionManager implements CallSessionManager {
       return { needsOpener: false, needsOutcome: false, canRecover: false };
     }
 
-    const needsOpener = !this.currentSession.pickupLineUsed;
+    // Opener is optional now, only outcome is required
+    const needsOpener = false; // Optional
     const needsOutcome = !this.currentSession.outcome;
 
     return {
       needsOpener,
       needsOutcome,
-      canRecover: needsOpener || needsOutcome,
+      canRecover: needsOutcome,
     };
   }
 }

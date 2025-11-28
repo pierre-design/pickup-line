@@ -18,6 +18,7 @@ import {
 import { LocalStorageDataRepository, TranscriptionServiceFactory } from './infrastructure';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { OutcomeDetector } from './domain/outcomeDetector';
+import { Analytics } from '@vercel/analytics/react';
 import './App.css';
 
 function App() {
@@ -272,6 +273,9 @@ function App() {
           suggestedOutcome={suggestedOutcome}
           confidence={outcomeConfidence}
         />
+        
+        {/* Vercel Analytics */}
+        <Analytics />
       </div>
     </ErrorBoundary>
   );
