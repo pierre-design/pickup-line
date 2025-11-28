@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Recommendations</title>
+</head>
+<body>
+    <h1>Pickup Line Coach - Debug Tool</h1>
+    <button onclick="checkLocalStorage()">Check Current Data</button>
+    <button onclick="clearData()">Clear All Data</button>
+    <pre id="output"></pre>
+
+    <script>
+        function checkLocalStorage() {
+            const output = document.getElementById('output');
+            
+            // Get stored data
+            const sessions = localStorage.getItem('pickup-coach:call-sessions');
+            const stats = localStorage.getItem('pickup-coach:pickup-line-stats');
+            
+            const result = {
+                sessions: sessions ? JSON.parse(sessions) : [],
+                statistics: stats ? JSON.parse(stats) : [],
+                timestamp: new Date().toISOString()
+            };
+            
+            output.textContent = JSON.stringify(result, null, 2);
+            
+            // Also log to console
+            console.log('Current data:', result);
+        }
+        
+        function clearData() {
+            localStorage.removeItem('pickup-coach:call-sessions');
+            localStorage.removeItem('pickup-coach:pickup-line-stats');
+            alert('Data cleared!');
+            checkLocalStorage();
+        }
+        
+        // Auto-check on load
+        checkLocalStorage();
+    </script>
+</body>
+</html>
