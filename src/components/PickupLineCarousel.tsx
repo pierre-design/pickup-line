@@ -118,7 +118,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
             return (
               <div
                 key={line.id}
-                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start`}
+                className={`flex-shrink-0 w-[calc(100vw-4.5rem)] md:w-full snap-start`}
               >
                 <div className="bg-white rounded-2xl shadow-lg h-[320px] flex flex-col items-start relative p-6">
                   {/* Pickup Line Text */}
@@ -174,11 +174,8 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
               
               {/* Text */}
               <div>
-                <p className="text-lg font-bold mb-1" style={{ color: '#000000' }}>
+                <p className="text-lg font-bold" style={{ color: '#000000' }}>
                   Finding your best pickup line
-                </p>
-                <p className="text-sm" style={{ color: '#374151' }}>
-                  Analyzing performance data...
                 </p>
               </div>
             </div>
