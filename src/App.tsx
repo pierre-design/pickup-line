@@ -129,9 +129,10 @@ function App() {
       // Show feedback
       setFeedback(result.feedback);
 
-      if (result.feedback.showCelebration) {
-        setShowCelebration(true);
-      }
+      // Celebration animation removed per user request
+      // if (result.feedback.showCelebration) {
+      //   setShowCelebration(true);
+      // }
 
       setCurrentSession(null);
     } catch (error) {

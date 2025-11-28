@@ -20,7 +20,7 @@ export function OutcomeSelector({ show, onSelect, suggestedOutcome, confidence }
           initial={{ y: '100%' }}
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
-          transition={{ type: 'tween', duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ type: 'tween', duration: 0.2, ease: 'linear' }}
           className="absolute bottom-0 left-4 right-4 bg-[#04411F] rounded-t-3xl shadow-2xl"
         >
           <div className="p-6 pb-8">

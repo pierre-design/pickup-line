@@ -150,6 +150,26 @@ function PickupLineCard({
 }: PickupLineCardProps) {
   const successRatePercentage = statistics ? statistics.successRate * 100 : 0;
 
+  // Function to render text with name chips
+  const renderTextWithChips = (text: string) => {
+    const parts = text.split('{your name}');
+    
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < parts.length - 1 && (
+              <span className="inline-flex items-center px-2 py-1 mx-1 text-xs font-medium bg-light-green text-black rounded-md">
+                your name
+              </span>
+            )}
+          </span>
+        ))}
+      </>
+    );
+  };
+
   return (
     <button
       onClick={onClick}
@@ -176,7 +196,7 @@ function PickupLineCard({
 
       {/* Pickup Line Text */}
       <p className={`text-xs sm:text-sm font-medium leading-relaxed mb-2 sm:mb-3 break-words ${isExcluded ? 'text-gray-500' : 'text-gray-900'}`}>
-        {pickupLine.text}
+        {renderTextWithChips(pickupLine.text)}
       </p>
 
       {/* Success Rate Badge and Excluded Indicator */}

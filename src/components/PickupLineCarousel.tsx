@@ -9,6 +9,26 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Function to render text with name chips
+  const renderTextWithChips = (text: string) => {
+    const parts = text.split('{your name}');
+    
+    return (
+      <>
+        {parts.map((part, index) => (
+          <span key={index}>
+            {part}
+            {index < parts.length - 1 && (
+              <span className="inline-flex items-center px-2 py-1 mx-1 text-sm font-medium bg-light-green text-black rounded-md">
+                your name
+              </span>
+            )}
+          </span>
+        ))}
+      </>
+    );
+  };
+
   // Find the top performing pickup line
   const topPerformerId = statistics.length > 0
     ? statistics.reduce((top, current) => 
@@ -47,15 +67,14 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
         className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 md:mx-0"
         style={{ scrollPaddingLeft: '1.5rem', scrollPaddingRight: '1.5rem' }}
       >
-        <div className="flex gap-4 pb-4 px-6 md:px-0">
-          {sortedLines.map((line, index) => {
+        <div className="flex gap-4 pb-4 pl-6 pr-12 md:px-0">
+          {sortedLines.map((line) => {
             const isTopPerformer = line.id === topPerformerId;
-            const isLast = index === sortedLines.length - 1;
             
             return (
               <div
                 key={line.id}
-                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start ${isLast ? 'mr-6 md:mr-0' : ''}`}
+                className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start`}
               >
                 <div className="bg-white rounded-2xl shadow-lg h-[320px] flex flex-col items-start relative p-6">
                   {/* Recommended Badge */}
@@ -72,7 +91,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
                     className="text-2xl sm:text-3xl font-bold leading-snug text-left" 
                     style={{ color: '#000000' }}
                   >
-                    {line.text}
+                    {renderTextWithChips(line.text)}
                   </p>
                 </div>
               </div>

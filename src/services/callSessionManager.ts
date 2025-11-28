@@ -162,7 +162,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
           message: this.currentSession.outcome === 'stayed' 
             ? 'Great job! The client stayed on the call.'
             : 'The client left the call. Keep practicing!',
-          showCelebration: this.currentSession.outcome === 'stayed',
+          showCelebration: false, // Celebration removed per user request
         };
       }
     } catch (error) {
@@ -173,7 +173,7 @@ export class DefaultCallSessionManager implements CallSessionManager {
         message: this.currentSession.outcome === 'stayed' 
           ? 'Great job! The client stayed on the call.'
           : 'The client left the call. Keep practicing!',
-        showCelebration: this.currentSession.outcome === 'stayed',
+        showCelebration: false, // Celebration removed per user request
       };
     }
 

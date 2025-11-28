@@ -44,7 +44,7 @@ export class DefaultFeedbackGenerator implements FeedbackGenerator {
     return {
       type: 'positive',
       message: randomMessage,
-      showCelebration: true,
+      showCelebration: false, // Celebration removed per user request
     };
   }
 
