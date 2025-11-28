@@ -29,7 +29,7 @@ export const PICKUP_LINES: PickupLine[] = [
   },
   {
     id: 'pl-6',
-    text: "Hello, it's {your name} from Dis-Chem Life. How are you today? I'm also well, thank you. Do you have a couple of minutes to talk about the funeral cover?",
+    text: "Hello, it's {your name} from Dis-Chem Life. How are you today? I'm also well, thank you. Do you have a couple of minutes to talk?",
     category: 'traditional',
   },
   {
