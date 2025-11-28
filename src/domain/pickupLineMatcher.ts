@@ -154,9 +154,83 @@ export class PickupLineMatcher {
 
   /**
    * Calculate similarity between two strings using Levenshtein distance
+   * Handles {your name} placeholder as a wildcard that can match any name
    * Returns a percentage (0-100) where 100 is identical
    */
-  private calculateSimilarity(str1: string, str2: string): number {
+  private calculateSimilarity(transcription: string, pickupLineText: string): number {
+    // If the pickup line contains {your name}, use special wildcard matching
+    if (pickupLineText.includes('{your name}')) {
+      return this.calculateWildcardSimilarity(transcription, pickupLineText);
+    }
+
+    // Standard Levenshtein distance calculation
+    const distance = this.levenshteinDistance(transcription, pickupLineText);
+    const maxLength = Math.max(transcription.length, pickupLineText.length);
+
+    if (maxLength === 0) {
+      return 100; // Both strings are empty
+    }
+
+    const similarity = ((maxLength - distance) / maxLength) * 100;
+    return Math.round(similarity * 100) / 100; // Round to 2 decimal places
+  }
+
+  /**
+   * Calculate similarity when pickup line contains {your name} placeholder
+   * Treats {your name} as a wildcard that can match any single word (name)
+   */
+  private calculateWildcardSimilarity(transcription: string, pickupLineText: string): number {
+    // Split the pickup line at {your name} to get before and after parts
+    const parts = pickupLineText.split('{your name}');
+    
+    if (parts.length !== 2) {
+      // Fallback to standard matching if multiple or no placeholders
+      return this.calculateStandardSimilarity(transcription, pickupLineText);
+    }
+
+    const [beforePart, afterPart] = parts;
+    const beforeNormalized = this.normalizeText(beforePart);
+    const afterNormalized = this.normalizeText(afterPart);
+    const transcriptionNormalized = this.normalizeText(transcription);
+
+    // Check if transcription starts with beforePart and ends with afterPart
+    if (!transcriptionNormalized.startsWith(beforeNormalized)) {
+      return 0; // Doesn't match the beginning
+    }
+
+    if (!transcriptionNormalized.endsWith(afterNormalized)) {
+      return 0; // Doesn't match the ending
+    }
+
+    // Extract the middle part (should be the name)
+    const middleStart = beforeNormalized.length;
+    const middleEnd = transcriptionNormalized.length - afterNormalized.length;
+    
+    if (middleEnd <= middleStart) {
+      return 0; // No room for a name
+    }
+
+    const middlePart = transcriptionNormalized.substring(middleStart, middleEnd).trim();
+    
+    // Check if middle part looks like a name (1-3 words, reasonable length)
+    const nameWords = middlePart.split(/\s+/);
+    if (nameWords.length === 0 || nameWords.length > 3 || middlePart.length > 50) {
+      return 0; // Doesn't look like a reasonable name
+    }
+
+    // Calculate similarity based on how well the before/after parts match
+    const expectedLength = beforeNormalized.length + afterNormalized.length + 10; // Assume average name is ~10 chars
+    const actualLength = transcriptionNormalized.length;
+    const lengthSimilarity = 1 - Math.abs(expectedLength - actualLength) / Math.max(expectedLength, actualLength);
+
+    // High similarity if structure matches and name is reasonable
+    return Math.max(85, lengthSimilarity * 100); // Minimum 85% if structure matches
+  }
+
+  /**
+   * Standard similarity calculation without wildcards
+   */
+  private calculateStandardSimilarity(str1: string, str2: string): number {
     const distance = this.levenshteinDistance(str1, str2);
     const maxLength = Math.max(str1.length, str2.length);
 

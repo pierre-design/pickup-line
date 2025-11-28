@@ -28,6 +28,22 @@ A real-time feedback application that helps sales agents improve their call open
 - npm or yarn
 - Modern browser (Chrome, Edge, or Safari for Web Speech API)
 
+### Optional: AssemblyAI Setup
+
+For professional-grade speech recognition, you can configure AssemblyAI:
+
+1. Sign up at [AssemblyAI](https://www.assemblyai.com/)
+2. Get your API key from the dashboard
+3. Add it to your environment variables:
+   ```bash
+   # .env.local (for local development)
+   VITE_ASSEMBLYAI_API_KEY=your_api_key_here
+   
+   # For Vercel deployment, add as environment variable in dashboard
+   ```
+
+**Note**: The app works perfectly without AssemblyAI using the browser's built-in Web Speech API. AssemblyAI provides higher accuracy and works in more environments.
+
 ### Installation
 
 ```bash

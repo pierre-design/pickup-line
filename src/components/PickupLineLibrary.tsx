@@ -160,7 +160,7 @@ function PickupLineCard({
           <span key={index}>
             {part}
             {index < parts.length - 1 && (
-              <span className="inline-flex items-center px-2 py-1 mx-1 text-xs font-medium bg-light-green text-black rounded-md">
+              <span className="inline-flex items-baseline px-2 py-1 mx-1 text-xs font-medium bg-light-green/70 text-black rounded-md">
                 your name
               </span>
             )}

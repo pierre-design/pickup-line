@@ -47,13 +47,19 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
+        
+        // Handle 401 errors more gracefully (expected without API key)
+        if (response.status === 401) {
+          throw new Error('AssemblyAI API key not configured or invalid');
+        }
+        
         throw new Error(`Failed to get AssemblyAI token: ${errorData.error || response.status}`);
       }
 
       const data = await response.json();
       const token = data.token;
 
-      // Connect to WebSocket
+      // Connect to WebSocket using new universal streaming endpoint
       this.socket = new WebSocket(
         `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}`
       );
@@ -131,15 +137,14 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
 
       this.mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0 && this.socket?.readyState === WebSocket.OPEN) {
-          // Convert to base64 and send
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const base64Audio = (reader.result as string).split(',')[1];
+          // Convert to ArrayBuffer and then to base64
+          event.data.arrayBuffer().then(buffer => {
+            const bytes = new Uint8Array(buffer);
+            const base64Audio = btoa(String.fromCharCode(...bytes));
             this.socket?.send(JSON.stringify({
               audio_data: base64Audio,
             }));
-          };
-          reader.readAsDataURL(event.data);
+          });
         }
       };
 

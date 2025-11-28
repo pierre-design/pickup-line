@@ -15,9 +15,19 @@ describe('PickupLineMatcher', () => {
 
     it('should match pickup line with minor variations', () => {
       const matcher = new PickupLineMatcher();
-      // Original: "Hi, I noticed you've been looking at our product. Can I help answer any questions?"
-      const variation = "Hi I noticed youve been looking at our product Can I help answer any questions";
+      // Test with actual pickup line but with name substituted and minor variations
+      const variation = "Hi thank you for requesting a callback from Dis Chem Life Im John Is this a good time to talk about how you can increase your Better Rewards with our cover";
       const result = matcher.match(variation);
+      
+      expect(result).not.toBeNull();
+      expect(result?.id).toBe(PICKUP_LINES[0].id);
+    });
+
+    it('should match pickup line with {your name} placeholder replaced by actual name', () => {
+      const matcher = new PickupLineMatcher();
+      // Test with exact structure but real name instead of {your name}
+      const withName = "Hi, thank you for requesting a callback from Dis-Chem Life. I'm Sarah. Is this a good time to talk about how you can increase your Better Rewards with our cover?";
+      const result = matcher.match(withName);
       
       expect(result).not.toBeNull();
       expect(result?.id).toBe(PICKUP_LINES[0].id);

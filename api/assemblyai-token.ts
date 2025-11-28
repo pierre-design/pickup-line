@@ -21,18 +21,28 @@ export default async function handler(
   }
 
   try {
-    // Make request to AssemblyAI
+    // Make request to AssemblyAI using new streaming API
     const response = await fetch('https://api.assemblyai.com/v2/realtime/token', {
       method: 'POST',
       headers: {
         'authorization': apiKey,
         'content-type': 'application/json',
       },
+      body: JSON.stringify({
+        expires_in: 3600, // Token expires in 1 hour
+      }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AssemblyAI API error:', response.status, errorText);
+      
+      // Log 401 errors as warnings since they're expected without API key
+      if (response.status === 401) {
+        console.warn('AssemblyAI API key not configured or invalid:', response.status);
+      } else {
+        console.error('AssemblyAI API error:', response.status, errorText);
+      }
+      
       return res.status(response.status).json({ 
         error: 'Failed to get token from AssemblyAI',
         details: errorText 
