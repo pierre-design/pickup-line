@@ -26,7 +26,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
             // Remove the braces and render as grey text
             const placeholderText = part.slice(1, -1);
             return (
-              <span key={index} className="text-gray-500">
+              <span key={index} className="text-black/30">
                 {placeholderText}
               </span>
             );
@@ -78,9 +78,17 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
                 className={`flex-shrink-0 w-[calc(100vw-3rem)] md:w-full snap-start`}
               >
                 <div className="bg-white rounded-2xl shadow-lg h-[320px] flex flex-col items-start relative p-6">
-                  {/* Recommended Badge */}
+                  {/* Pickup Line Text */}
+                  <p 
+                    className="text-2xl sm:text-3xl font-bold leading-snug text-left flex-1" 
+                    style={{ color: '#000000' }}
+                  >
+                    {renderTextWithPlaceholders(line.text)}
+                  </p>
+                  
+                  {/* Recommended Badge - Bottom Right */}
                   {isRecommended && (
-                    <div className="absolute top-6 right-6">
+                    <div className="absolute bottom-6 right-6">
                       <span 
                         className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-light-green text-black"
                         title={recommendationExplanation}
@@ -89,14 +97,6 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
                       </span>
                     </div>
                   )}
-                  
-                  {/* Pickup Line Text */}
-                  <p 
-                    className="text-2xl sm:text-3xl font-bold leading-snug text-left" 
-                    style={{ color: '#000000' }}
-                  >
-                    {renderTextWithPlaceholders(line.text)}
-                  </p>
                 </div>
               </div>
             );
