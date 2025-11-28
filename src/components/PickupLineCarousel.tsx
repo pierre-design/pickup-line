@@ -111,7 +111,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
         className="overflow-x-scroll overflow-y-hidden snap-x snap-mandatory scroll-smooth scrollbar-hide -mx-6 md:mx-0"
         style={{ scrollPaddingLeft: '1.5rem', scrollPaddingRight: '1.5rem' }}
       >
-        <div className="flex gap-4 pb-4 pl-6 pr-6 md:px-0">
+        <div className="flex gap-4 pb-4 pl-6 pr-12 md:pl-0 md:pr-0">
           {lines.map((line) => {
             const isRecommended = line.id === recommendedId;
             
@@ -174,10 +174,10 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
               
               {/* Text */}
               <div>
-                <p className="text-lg font-bold text-black mb-1">
+                <p className="text-lg font-bold mb-1" style={{ color: '#000000' }}>
                   Finding your best pickup line
                 </p>
-                <p className="text-sm text-gray-700">
+                <p className="text-sm" style={{ color: '#374151' }}>
                   Analyzing performance data...
                 </p>
               </div>
