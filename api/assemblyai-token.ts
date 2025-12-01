@@ -19,8 +19,15 @@ export default async function handler(
   const apiKey = process.env.ASSEMBLYAI_API_KEY || process.env.VITE_ASSEMBLYAI_API_KEY;
 
   if (!apiKey) {
+    console.error('[AssemblyAI Token] No API key found in environment variables');
     return res.status(500).json({ error: 'AssemblyAI API key not configured' });
   }
+
+  // Log key info for debugging (first/last 4 chars only for security)
+  const keyPreview = apiKey.length > 8 
+    ? `${apiKey.substring(0, 4)}...${apiKey.substring(apiKey.length - 4)}`
+    : '[key too short]';
+  console.log('[AssemblyAI Token] Using API key:', keyPreview);
 
   try {
     // Make request to AssemblyAI using new streaming API
@@ -38,16 +45,18 @@ export default async function handler(
     if (!response.ok) {
       const errorText = await response.text();
       
-      // Log 401 errors as warnings since they're expected without API key
-      if (response.status === 401) {
-        console.warn('AssemblyAI API key not configured or invalid:', response.status);
-      } else {
-        console.error('AssemblyAI API error:', response.status, errorText);
-      }
+      // Log detailed error information
+      console.error('[AssemblyAI Token] API request failed:', {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+        keyPreview
+      });
       
       return res.status(response.status).json({ 
         error: 'Failed to get token from AssemblyAI',
-        details: errorText 
+        details: errorText,
+        status: response.status
       });
     }
 

@@ -142,32 +142,6 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       >
         {isSessionActive ? 'End Call' : 'Start Call'}
       </button>
-
-      {/* Detected Pickup Line */}
-      {detectedPickupLine && (
-        <div 
-          className="mt-6 p-4 glass rounded-xl border border-primary/30 animate-scale-in"
-          role="status"
-          aria-live="polite"
-          aria-label={`Detected opener: ${detectedPickupLine.text}`}
-        >
-          <div className="flex items-start gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-primary uppercase tracking-wide mb-1">
-                Detected Opener
-              </p>
-              <p className="text-sm text-white font-medium leading-relaxed">
-                {detectedPickupLine.text}
-              </p>
-              {detectedPickupLine.category && (
-                <span className="inline-block mt-2 px-2 py-1 text-xs font-medium text-white/80 bg-white/10 rounded-md">
-                  {detectedPickupLine.category}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 });
