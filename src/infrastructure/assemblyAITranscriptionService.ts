@@ -102,6 +102,8 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
     this.socket.onmessage = (message) => {
       const data = JSON.parse(message.data);
       
+      console.log('[AssemblyAI] Message received:', data);
+      
       if (data.message_type === 'FinalTranscript') {
         const transcript = data.text.trim();
         
@@ -109,6 +111,8 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
           console.log(`[AssemblyAI] Transcribed (${this.currentSpeaker}):`, transcript);
           this.transcriptionCallback(transcript, this.currentSpeaker);
         }
+      } else if (data.error) {
+        console.error('[AssemblyAI] Error from server:', data.error);
       }
     };
 
@@ -116,8 +120,12 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
       console.error('[AssemblyAI] WebSocket error:', error);
     };
 
-    this.socket.onclose = () => {
-      console.log('[AssemblyAI] WebSocket closed');
+    this.socket.onclose = (event) => {
+      console.log('[AssemblyAI] WebSocket closed:', {
+        code: event.code,
+        reason: event.reason,
+        wasClean: event.wasClean
+      });
       this.isListening = false;
     };
   }
@@ -132,25 +140,40 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
         } 
       });
 
-      this.mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'audio/webm',
-      });
+      // Use AudioContext to get raw PCM audio data
+      const audioContext = new AudioContext({ sampleRate: 16000 });
+      const source = audioContext.createMediaStreamSource(stream);
+      const processor = audioContext.createScriptProcessor(4096, 1, 1);
 
-      this.mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0 && this.socket?.readyState === WebSocket.OPEN) {
-          // Convert to ArrayBuffer and then to base64
-          event.data.arrayBuffer().then(buffer => {
-            const bytes = new Uint8Array(buffer);
-            const base64Audio = btoa(String.fromCharCode(...bytes));
-            this.socket?.send(JSON.stringify({
-              audio_data: base64Audio,
-            }));
-          });
+      source.connect(processor);
+      processor.connect(audioContext.destination);
+
+      processor.onaudioprocess = (e) => {
+        if (this.socket?.readyState === WebSocket.OPEN) {
+          const inputData = e.inputBuffer.getChannelData(0);
+          
+          // Convert Float32Array to Int16Array (PCM16)
+          const pcm16 = new Int16Array(inputData.length);
+          for (let i = 0; i < inputData.length; i++) {
+            const s = Math.max(-1, Math.min(1, inputData[i]));
+            pcm16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+          }
+          
+          // Convert to base64
+          const base64Audio = btoa(String.fromCharCode(...new Uint8Array(pcm16.buffer)));
+          
+          this.socket?.send(JSON.stringify({
+            audio_data: base64Audio,
+          }));
         }
       };
 
-      // Send audio chunks every 100ms
-      this.mediaRecorder.start(100);
+      // Store references for cleanup
+      (this as any).audioContext = audioContext;
+      (this as any).processor = processor;
+      (this as any).source = source;
+      (this as any).stream = stream;
+
       console.log('[AssemblyAI] Audio capture started');
     } catch (error) {
       console.error('[AssemblyAI] Failed to start audio capture:', error);
@@ -165,11 +188,30 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
     }
 
     try {
-      // Stop media recorder
-      if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-        this.mediaRecorder.stop();
-        this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
-        this.mediaRecorder = null;
+      // Stop audio processing
+      const processor = (this as any).processor;
+      const source = (this as any).source;
+      const audioContext = (this as any).audioContext;
+      const stream = (this as any).stream;
+
+      if (processor) {
+        processor.disconnect();
+        (this as any).processor = null;
+      }
+      
+      if (source) {
+        source.disconnect();
+        (this as any).source = null;
+      }
+      
+      if (audioContext) {
+        await audioContext.close();
+        (this as any).audioContext = null;
+      }
+      
+      if (stream) {
+        stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
+        (this as any).stream = null;
       }
 
       // Close WebSocket

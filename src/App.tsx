@@ -103,6 +103,8 @@ function App() {
 
     if (!currentSession) {
       console.warn('No current session when selecting outcome');
+      // Still stop listening if no session
+      await callControlRef.current?.stopListening();
       return;
     }
 
@@ -138,12 +140,16 @@ function App() {
       // }
 
       setCurrentSession(null);
+      
+      // Stop microphone listening after all API calls are complete
+      await callControlRef.current?.stopListening();
     } catch (error) {
       console.error('Error ending session:', error);
       console.error('Error details:', error);
       
-      // Still clear the session
+      // Still clear the session and stop listening
       setCurrentSession(null);
+      await callControlRef.current?.stopListening();
       
       setFeedback({
         type: 'negative',
@@ -185,7 +191,7 @@ function App() {
         </a>
 
         {/* Section 1: Home / Call Control */}
-        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe py-8 px-6 md:px-8 lg:px-8">
+        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe py-8 px-6 md:px-8 md:pt-16 lg:px-8 lg:pt-20">
           <div className="max-w-2xl mx-auto">
             {/* Header with Status Indicator */}
             <div className="flex items-center justify-between mb-4">

@@ -15,6 +15,7 @@ interface CallControlPanelProps {
 export interface CallControlPanelRef {
   setDetectedPickupLine: (pickupLine: PickupLine | null) => void;
   isSessionActive: () => boolean;
+  stopListening: () => Promise<void>;
 }
 
 /**
@@ -35,6 +36,7 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
     useImperativeHandle(ref, () => ({
       setDetectedPickupLine,
       isSessionActive: () => isSessionActive,
+      stopListening: stopListeningAfterOutcome,
     }));
 
     useEffect(() => {
@@ -104,19 +106,33 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
 
   const handleEndCall = async () => {
     try {
-      if (isListening) {
-        await transcriptionService.stopListening();
-        setIsListening(false);
-      }
-      
+      // Don't stop listening yet - wait for outcome selection and API calls
+      // Just mark session as inactive and trigger the outcome selector
       setIsSessionActive(false);
       setDetectedPickupLine(null);
       onSessionEnd?.();
     } catch (error) {
       console.error('Failed to end call:', error);
       setIsSessionActive(false);
-      setIsListening(false);
+      // Stop listening on error
+      if (isListening) {
+        await transcriptionService.stopListening().catch(console.error);
+        setIsListening(false);
+      }
       onSessionEnd?.();
+    }
+  };
+  
+  // Expose method to stop listening (to be called after outcome is selected)
+  const stopListeningAfterOutcome = async () => {
+    if (isListening) {
+      try {
+        await transcriptionService.stopListening();
+        setIsListening(false);
+      } catch (error) {
+        console.error('Failed to stop listening:', error);
+        setIsListening(false);
+      }
     }
   };
 
