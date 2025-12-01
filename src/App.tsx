@@ -177,7 +177,7 @@ function App() {
 
   // Get service info for status indicator
   const serviceInfo = TranscriptionServiceFactory.getAvailableServices();
-  const isServiceActive = serviceInfo.current !== 'mock';
+  const isServiceActive = serviceInfo.webSpeech;
 
   return (
     <ErrorBoundary>

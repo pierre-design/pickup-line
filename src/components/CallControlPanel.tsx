@@ -32,6 +32,7 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
     const [detectedPickupLine, setDetectedPickupLine] = useState<PickupLine | null>(null);
     const [isListening, setIsListening] = useState(false);
     const [pickupLineMatcher] = useState(() => new PickupLineMatcher());
+    const [fallbackTimeout, setFallbackTimeout] = useState<number | null>(null);
 
     useImperativeHandle(ref, () => ({
       setDetectedPickupLine,
@@ -47,8 +48,14 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
         if (speaker === 'agent' && isSessionActive && !detectedPickupLine) {
           const matchedPickupLine = pickupLineMatcher.match(text);
           if (matchedPickupLine) {
-            console.log('Detected pickup line:', matchedPickupLine.id);
+            console.log('Detected pickup line from speech:', matchedPickupLine.id);
             setDetectedPickupLine(matchedPickupLine);
+            
+            // Clear fallback timeout since we detected it
+            if (fallbackTimeout) {
+              clearTimeout(fallbackTimeout);
+              setFallbackTimeout(null);
+            }
             
             // Record the pickup line in the session
             try {
@@ -60,15 +67,18 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
           }
         }
       });
-    }, [transcriptionService, isSessionActive, detectedPickupLine, pickupLineMatcher, sessionManager]);
+    }, [transcriptionService, isSessionActive, detectedPickupLine, pickupLineMatcher, sessionManager, fallbackTimeout]);
 
     useEffect(() => {
       return () => {
         if (isListening) {
           transcriptionService.stopListening().catch(console.error);
         }
+        if (fallbackTimeout) {
+          clearTimeout(fallbackTimeout);
+        }
       };
-    }, [isListening, transcriptionService]);
+    }, [isListening, transcriptionService, fallbackTimeout]);
 
   const handleStartCall = async () => {
     try {
@@ -76,25 +86,40 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       setIsSessionActive(true);
       setDetectedPickupLine(null);
       
-      // Auto-record the active pickup line from carousel as fallback
-      if (activePickupLine) {
-        setDetectedPickupLine(activePickupLine);
-        try {
-          sessionManager.recordOpener(activePickupLine);
-          console.log('Auto-recorded active pickup line from carousel:', activePickupLine.id);
-        } catch (error) {
-          console.error('Failed to record active pickup line:', error);
-        }
-      }
-      
-      // Try to start transcription, but don't fail if it's not available
+      // Start transcription to detect which pickup line is used
       try {
         await transcriptionService.startListening();
         setIsListening(true);
+        console.log('Transcription started - will detect pickup line from speech');
+        
+        // Set a fallback timeout: if no pickup line detected in 5 seconds, use carousel
+        const timeout = setTimeout(() => {
+          if (!detectedPickupLine && activePickupLine) {
+            setDetectedPickupLine(activePickupLine);
+            try {
+              sessionManager.recordOpener(activePickupLine);
+              console.log('Fallback timeout - using carousel pickup line:', activePickupLine.id);
+            } catch (error) {
+              console.error('Failed to record carousel pickup line:', error);
+            }
+          }
+        }, 5000);
+        setFallbackTimeout(timeout);
+        
       } catch (transcriptionError) {
-        // Log but don't show error - the app works fine without real transcription
-        console.log('Transcription not available, continuing without it:', transcriptionError);
+        console.warn('Transcription not available, using carousel fallback:', transcriptionError);
         setIsListening(false);
+        
+        // Immediate fallback: Use the active pickup line from carousel
+        if (activePickupLine) {
+          setDetectedPickupLine(activePickupLine);
+          try {
+            sessionManager.recordOpener(activePickupLine);
+            console.log('Using carousel fallback - recorded pickup line:', activePickupLine.id);
+          } catch (error) {
+            console.error('Failed to record active pickup line:', error);
+          }
+        }
       }
       
       onSessionStart?.(session);

@@ -133,13 +133,19 @@ export function PickupLineCarousel({ statistics = [], onActivePickupLineChange }
                 className={`flex-shrink-0 w-[calc(100vw-4.5rem)] md:w-full snap-start`}
               >
                 <div className="bg-white rounded-2xl shadow-lg h-[320px] flex flex-col items-start relative p-6">
-                  {/* Pickup Line Text */}
-                  <p 
-                    className="text-2xl sm:text-3xl font-bold leading-snug text-left flex-1" 
-                    style={{ color: '#000000' }}
-                  >
-                    {renderTextWithPlaceholders(line.text)}
-                  </p>
+                  {/* Pickup Line Text - with bottom padding to prevent badge overlap */}
+                  <div className={`flex-1 flex items-start ${isRecommended ? 'pb-10' : ''}`}>
+                    <p 
+                      className={`font-bold leading-snug text-left ${
+                        line.text.length > 80 ? 'text-xl sm:text-2xl' : 
+                        line.text.length > 60 ? 'text-2xl sm:text-3xl' : 
+                        'text-2xl sm:text-3xl'
+                      }`}
+                      style={{ color: '#000000' }}
+                    >
+                      {renderTextWithPlaceholders(line.text)}
+                    </p>
+                  </div>
                   
                   {/* Recommended Badge - Bottom Right */}
                   {isRecommended && (

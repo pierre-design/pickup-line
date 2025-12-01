@@ -4,19 +4,20 @@ A real-time feedback application that helps sales agents improve their call open
 
 ## Features
 
-- **Real-time Speech Recognition**: Uses Web Speech API (browser-native) or AssemblyAI for professional transcription
+- **Real-time Speech Recognition**: Uses Web Speech API (browser-native) to detect which pickup line you use
 - **Performance Tracking**: Track success rates for each pickup line
 - **Adaptive Recommendations**: System learns which lines work best and suggests alternatives
 - **Duolingo-inspired UX**: Encouraging feedback with celebration animations
 - **Apple Design Aesthetics**: Clean, modern interface with smooth animations
 - **Comprehensive Testing**: 156 unit tests with 100% pass rate
+- **No API Keys Required**: Works out of the box in all modern browsers
 
 ## Tech Stack
 
 - **Frontend**: React 19 + TypeScript
 - **Styling**: Tailwind CSS 4
 - **Animations**: Framer Motion
-- **Speech Recognition**: Web Speech API / AssemblyAI
+- **Speech Recognition**: Web Speech API (browser-native)
 - **Testing**: Vitest + Testing Library
 - **Build Tool**: Vite
 
@@ -28,21 +29,9 @@ A real-time feedback application that helps sales agents improve their call open
 - npm or yarn
 - Modern browser (Chrome, Edge, or Safari for Web Speech API)
 
-### Optional: AssemblyAI Setup
+### No Setup Required!
 
-For professional-grade speech recognition, you can configure AssemblyAI:
-
-1. Sign up at [AssemblyAI](https://www.assemblyai.com/)
-2. Get your API key from the dashboard
-3. Add it to your environment variables:
-   ```bash
-   # .env.local (for local development)
-   VITE_ASSEMBLYAI_API_KEY=your_api_key_here
-   
-   # For Vercel deployment, add as environment variable in dashboard
-   ```
-
-**Note**: The app works perfectly without AssemblyAI using the browser's built-in Web Speech API. AssemblyAI provides higher accuracy and works in more environments.
+The app uses Web Speech API which is built into modern browsers. No API keys or external services needed!
 
 ### Installation
 
