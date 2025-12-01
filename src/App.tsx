@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import type { CallSession, Feedback, PickupLineStatistics } from './domain/types';
+import type { CallSession, Feedback, PickupLineStatistics, PickupLine } from './domain/types';
 import {
   CallControlPanel,
   FeedbackCard,
@@ -38,6 +38,7 @@ function App() {
   const [suggestedOutcome, setSuggestedOutcome] = useState<'stayed' | 'left' | null>(null);
   const [outcomeConfidence, setOutcomeConfidence] = useState<number>(0);
   const [statistics, setStatistics] = useState<PickupLineStatistics[]>([]);
+  const [activePickupLine, setActivePickupLine] = useState<PickupLine | undefined>();
 
   const callControlRef = useRef<CallControlPanelRef>(null);
   const [outcomeDetector] = useState(() => new OutcomeDetector());
@@ -213,7 +214,10 @@ function App() {
 
             {/* Pickup Line Carousel */}
             <div className="mb-4">
-              <PickupLineCarousel statistics={statistics} />
+              <PickupLineCarousel 
+                statistics={statistics}
+                onActivePickupLineChange={setActivePickupLine}
+              />
             </div>
 
             {/* Call Control Panel */}
@@ -224,6 +228,7 @@ function App() {
                 transcriptionService={transcriptionService}
                 onSessionStart={handleSessionStart}
                 onSessionEnd={handleSessionEnd}
+                activePickupLine={activePickupLine}
               />
             </div>
 

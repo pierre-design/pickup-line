@@ -14,7 +14,9 @@ export default async function handler(
   }
 
   // Get API key from environment variable
-  const apiKey = process.env.VITE_ASSEMBLYAI_API_KEY;
+  // Note: Use ASSEMBLYAI_API_KEY (without VITE_ prefix) for serverless functions
+  // VITE_ prefix is only for frontend build-time variables
+  const apiKey = process.env.ASSEMBLYAI_API_KEY || process.env.VITE_ASSEMBLYAI_API_KEY;
 
   if (!apiKey) {
     return res.status(500).json({ error: 'AssemblyAI API key not configured' });

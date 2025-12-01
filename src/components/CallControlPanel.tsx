@@ -9,6 +9,7 @@ interface CallControlPanelProps {
   transcriptionService: AudioTranscriptionService;
   onSessionStart?: (session: CallSession) => void;
   onSessionEnd?: () => void;
+  activePickupLine?: PickupLine;
 }
 
 export interface CallControlPanelRef {
@@ -23,7 +24,7 @@ export interface CallControlPanelRef {
  */
 export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanelProps>(
   function CallControlPanel(
-    { sessionManager, transcriptionService, onSessionStart, onSessionEnd },
+    { sessionManager, transcriptionService, onSessionStart, onSessionEnd, activePickupLine },
     ref
   ) {
     const [isSessionActive, setIsSessionActive] = useState(false);
@@ -72,6 +73,17 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
       const session = sessionManager.startSession();
       setIsSessionActive(true);
       setDetectedPickupLine(null);
+      
+      // Auto-record the active pickup line from carousel as fallback
+      if (activePickupLine) {
+        setDetectedPickupLine(activePickupLine);
+        try {
+          sessionManager.recordOpener(activePickupLine);
+          console.log('Auto-recorded active pickup line from carousel:', activePickupLine.id);
+        } catch (error) {
+          console.error('Failed to record active pickup line:', error);
+        }
+      }
       
       // Try to start transcription, but don't fail if it's not available
       try {
