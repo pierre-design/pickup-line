@@ -184,8 +184,8 @@ function App() {
         </a>
 
         {/* Section 1: Home / Call Control - Content-based height with peek on desktop */}
-        <section className="min-h-[calc(100vh-120px)] md:min-h-[calc(100vh-80px)] bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe">
-          <div className="flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 pb-20 md:pb-12">
+        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe">
+          <div className="flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 pb-20 md:pb-32 min-h-[calc(100vh-100px)]">
             {/* Header with Status Indicator */}
             <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
@@ -250,7 +250,7 @@ function App() {
         {/* Section 2: Performance Dashboard - Content-based height */}
         <section className="min-h-screen bg-[#01150A] pb-20 md:pb-8">
           {/* Header */}
-          <div className="pt-safe pt-12 md:pt-16 pb-6 px-6 md:px-8 lg:px-8">
+          <div className="pt-12 md:pt-16 pb-6 px-6 md:px-8 lg:px-8">
             <div className="w-full max-w-4xl mx-auto">
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6">
                 Your best pickup
