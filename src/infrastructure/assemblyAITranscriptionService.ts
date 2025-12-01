@@ -13,7 +13,6 @@ import type { AudioTranscriptionService } from './interfaces';
 export class AssemblyAITranscriptionService implements AudioTranscriptionService {
   private apiKey: string;
   private socket: WebSocket | null = null;
-  private mediaRecorder: MediaRecorder | null = null;
   private isListening = false;
   private transcriptionCallback: ((text: string, speaker: 'agent' | 'client') => void) | null = null;
   private currentSpeaker: 'agent' | 'client' = 'agent';
