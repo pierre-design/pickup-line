@@ -184,8 +184,8 @@ function App() {
         </a>
 
         {/* Section 1: Home / Call Control - Content-based height with peek on desktop */}
-        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe">
-          <div className="flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 pb-20 md:pb-32 min-h-[calc(100vh-100px)]">
+        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe pb-20 md:pb-32">
+          <div className="flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 min-h-[85vh]">
             {/* Header with Status Indicator */}
             <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
@@ -235,7 +235,7 @@ function App() {
             </p>
 
             {/* Need Help Button */}
-            <div className="w-full max-w-2xl mt-auto mb-4 flex-shrink-0 flex justify-center">
+            <div className="w-full max-w-2xl mt-8 mb-4 flex-shrink-0 flex justify-center">
               <button
                 onClick={handleShowQuickGuide}
                 className="px-4 py-2 border-2 border-light-green text-light-green rounded-lg text-sm font-semibold hover:bg-light-green/10 transition-colors"
