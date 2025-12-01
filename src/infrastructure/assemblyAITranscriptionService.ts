@@ -60,8 +60,9 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
       const token = data.token;
 
       // Connect to WebSocket using universal-1 model
+      // Note: sample_rate must match your audio input (16000 is standard)
       this.socket = new WebSocket(
-        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}&model=universal-1`
+        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}`
       );
 
       this.setupWebSocket();
