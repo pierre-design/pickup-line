@@ -3,7 +3,6 @@ import type { CallSession, PickupLine } from '../domain/types';
 import type { CallSessionManager } from '../services/interfaces';
 import type { AudioTranscriptionService } from '../infrastructure/interfaces';
 import { PickupLineMatcher } from '../domain/pickupLineMatcher';
-import { PICKUP_LINES } from '../domain/pickupLines';
 
 interface CallControlPanelProps {
   sessionManager: CallSessionManager;
@@ -154,34 +153,6 @@ export const CallControlPanel = forwardRef<CallControlPanelRef, CallControlPanel
                 </span>
               )}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Manual Pickup Line Selection (for testing when transcription fails) */}
-      {isSessionActive && !detectedPickupLine && !isListening && (
-        <div className="mt-6 p-4 glass rounded-xl border border-yellow/30">
-          <p className="text-xs font-semibold text-yellow uppercase tracking-wide mb-3">
-            Select Pickup Line Used (Testing Mode)
-          </p>
-          <div className="grid grid-cols-1 gap-2">
-            {PICKUP_LINES.slice(0, 3).map((line) => (
-              <button
-                key={line.id}
-                onClick={() => {
-                  setDetectedPickupLine(line);
-                  try {
-                    sessionManager.recordOpener(line);
-                    console.log('Manually recorded pickup line:', line.id);
-                  } catch (error) {
-                    console.error('Failed to record pickup line:', error);
-                  }
-                }}
-                className="text-left p-2 text-xs text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-              >
-                {line.text.length > 60 ? `${line.text.substring(0, 60)}...` : line.text}
-              </button>
-            ))}
           </div>
         </div>
       )}
