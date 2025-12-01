@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from 'react';
 
 import { SmartRecommendationEngine } from '../services/recommendationEngine';
-import type { PickupLineStatistics } from '../domain/types';
+import type { PickupLineStatistics, PickupLine } from '../domain/types';
 import { PICKUP_LINES } from '../domain/pickupLines';
 
 interface PickupLineCarouselProps {
   statistics?: PickupLineStatistics[];
+  onActivePickupLineChange?: (pickupLine: PickupLine) => void;
 }
 
 const recommendationEngine = new SmartRecommendationEngine();
 
-export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps) {
+export function PickupLineCarousel({ statistics = [], onActivePickupLineChange }: PickupLineCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isUpdatingRecommendation, setIsUpdatingRecommendation] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -87,7 +88,7 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
     previousRecommendedIdRef.current = recommendedId;
   }, [recommendedId, lines]);
 
-  // Track scroll position to update active dot
+  // Track scroll position to update active dot and notify parent
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -96,12 +97,23 @@ export function PickupLineCarousel({ statistics = [] }: PickupLineCarouselProps)
       const scrollLeft = container.scrollLeft;
       const itemWidth = container.scrollWidth / lines.length;
       const index = Math.round(scrollLeft / itemWidth);
-      setActiveIndex(Math.min(index, lines.length - 1));
+      const newActiveIndex = Math.min(index, lines.length - 1);
+      
+      setActiveIndex(newActiveIndex);
+      
+      // Notify parent of active pickup line change
+      if (onActivePickupLineChange && lines[newActiveIndex]) {
+        onActivePickupLineChange(lines[newActiveIndex]);
+      }
     };
 
     container.addEventListener('scroll', handleScroll);
+    
+    // Also trigger on mount to set initial active line
+    handleScroll();
+    
     return () => container.removeEventListener('scroll', handleScroll);
-  }, [lines.length]);
+  }, [lines, onActivePickupLineChange]);
 
   return (
     <div className="w-full max-w-2xl">

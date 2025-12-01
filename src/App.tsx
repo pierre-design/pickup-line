@@ -174,7 +174,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div className="h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth bg-[#01150A]">
+      <div className="min-h-screen overflow-y-auto bg-[#01150A]">
         {/* Skip to main content */}
         <a
           href="#main-content"
@@ -183,9 +183,9 @@ function App() {
           Skip to main content
         </a>
 
-        {/* Section 1: Home / Call Control - Full viewport height */}
-        <section className="min-h-screen bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col snap-start snap-always pt-safe">
-          <div className="flex-1 flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 pb-20 md:pb-8 min-h-0">
+        {/* Section 1: Home / Call Control - Content-based height with peek on desktop */}
+        <section className="min-h-[calc(100vh-120px)] md:min-h-[calc(100vh-80px)] bg-gradient-to-b from-[#04411F] to-[#01150A] flex flex-col pt-safe">
+          <div className="flex-1 flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 pb-20 md:pb-12 min-h-0">
             {/* Header with Status Indicator */}
             <div className="w-full max-w-2xl mb-4 flex-shrink-0">
               <div className="flex items-center justify-between mb-4">
@@ -248,9 +248,9 @@ function App() {
         </section>
 
         {/* Section 2: Performance Dashboard - Content-based height */}
-        <section className="min-h-screen bg-[#01150A] snap-start snap-always pb-20 md:pb-8">
-          {/* Sticky Header */}
-          <div className="sticky top-0 z-10 bg-[#01150A] pt-safe pt-12 md:pt-20 pb-6 px-6 md:px-8 lg:px-8">
+        <section className="min-h-screen bg-[#01150A] pb-20 md:pb-8">
+          {/* Header */}
+          <div className="pt-safe pt-12 md:pt-16 pb-6 px-6 md:px-8 lg:px-8">
             <div className="w-full max-w-4xl mx-auto">
               <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6">
                 Your best pickup

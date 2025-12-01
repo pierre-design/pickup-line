@@ -1,7 +1,6 @@
-/* Smooth scroll snap with settling effect */
+/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
 }
 
 /* Gentle scroll settling animation */
@@ -29,7 +28,6 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: white;
-  overflow: hidden;
 }
 
 /* Safe area support for mobile devices with notches */
@@ -49,22 +47,7 @@ html, body {
   padding-right: env(safe-area-inset-right);
 }
 
-/* Scroll snap behavior */
-.snap-y {
-  scroll-snap-type: y proximity;
-}
 
-.snap-mandatory {
-  scroll-snap-type: y mandatory;
-}
-
-.snap-start {
-  scroll-snap-align: start;
-}
-
-.scroll-smooth {
-  scroll-behavior: smooth;
-}
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
