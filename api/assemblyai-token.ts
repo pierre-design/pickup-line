@@ -30,15 +30,16 @@ export default async function handler(
   console.log('[AssemblyAI Token] Using API key:', keyPreview);
 
   try {
-    // Make request to AssemblyAI using new streaming API
+    // Make request to AssemblyAI using universal streaming API
+    // The new API requires specifying the model explicitly
     const response = await fetch('https://api.assemblyai.com/v2/realtime/token', {
       method: 'POST',
       headers: {
-        'authorization': apiKey,
-        'content-type': 'application/json',
+        'Authorization': apiKey,
       },
       body: JSON.stringify({
         expires_in: 3600, // Token expires in 1 hour
+        model: 'universal-1', // Use the new universal-1 model
       }),
     });
 

@@ -59,9 +59,9 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
       const data = await response.json();
       const token = data.token;
 
-      // Connect to WebSocket using new universal streaming endpoint
+      // Connect to WebSocket using universal-1 model
       this.socket = new WebSocket(
-        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}`
+        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}&model=universal-1`
       );
 
       this.setupWebSocket();
