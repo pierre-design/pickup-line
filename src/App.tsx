@@ -191,7 +191,7 @@ function App() {
         </a>
 
         {/* Section 1: Home / Call Control */}
-        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe py-8 px-6 md:px-8 md:pt-16 lg:px-8 lg:pt-20">
+        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe pt-8 pb-8 px-6 md:px-8 md:pt-16 lg:px-8 lg:pt-20">
           <div className="max-w-2xl mx-auto">
             {/* Header with Status Indicator */}
             <div className="flex items-center justify-between mb-4">
