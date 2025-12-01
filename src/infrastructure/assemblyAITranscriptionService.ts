@@ -56,12 +56,12 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
       }
 
       const data = await response.json();
-      const apiKey = data.token; // This is actually the API key from our proxy
+      const token = data.token;
 
-      // Connect to WebSocket using the new universal streaming API
+      // Connect to WebSocket using temporary token
       // Docs: https://www.assemblyai.com/docs/speech-to-text/streaming
       this.socket = new WebSocket(
-        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&api_key=${apiKey}`
+        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}`
       );
 
       this.setupWebSocket();
@@ -126,6 +126,9 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
         wasClean: event.wasClean
       });
       this.isListening = false;
+      
+      // Clean up audio resources when WebSocket closes unexpectedly
+      this.stopListening().catch(console.error);
     };
   }
 
@@ -181,36 +184,38 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
   }
 
   async stopListening(): Promise<void> {
-    if (!this.isListening) {
-      console.warn('[AssemblyAI] Not currently listening');
-      return;
-    }
-
     try {
-      // Stop audio processing
+      // Always try to clean up audio resources, even if isListening is false
+      // (WebSocket might have closed but audio is still running)
       const processor = (this as any).processor;
       const source = (this as any).source;
       const audioContext = (this as any).audioContext;
       const stream = (this as any).stream;
 
+      let cleanedUp = false;
+
       if (processor) {
         processor.disconnect();
         (this as any).processor = null;
+        cleanedUp = true;
       }
       
       if (source) {
         source.disconnect();
         (this as any).source = null;
+        cleanedUp = true;
       }
       
-      if (audioContext) {
+      if (audioContext && audioContext.state !== 'closed') {
         await audioContext.close();
         (this as any).audioContext = null;
+        cleanedUp = true;
       }
       
       if (stream) {
         stream.getTracks().forEach((track: MediaStreamTrack) => track.stop());
         (this as any).stream = null;
+        cleanedUp = true;
       }
 
       // Close WebSocket
@@ -218,12 +223,19 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
         this.socket.send(JSON.stringify({ terminate_session: true }));
         this.socket.close();
         this.socket = null;
+        cleanedUp = true;
       }
 
       this.isListening = false;
-      console.log('[AssemblyAI] Stopped listening');
+      
+      if (cleanedUp) {
+        console.log('[AssemblyAI] Stopped listening and cleaned up resources');
+      } else if (!this.isListening) {
+        console.log('[AssemblyAI] Already stopped');
+      }
     } catch (error) {
       console.error('[AssemblyAI] Failed to stop listening:', error);
+      this.isListening = false;
     }
   }
 

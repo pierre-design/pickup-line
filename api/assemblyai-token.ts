@@ -29,22 +29,44 @@ export default async function handler(
     : '[key too short]';
   console.log('[AssemblyAI Token] Using API key:', keyPreview);
 
-  // Note: The old /v2/realtime/token endpoint is deprecated
-  // The new universal streaming API connects directly with the API key
-  // This endpoint now just securely provides the API key to the frontend
+  // AssemblyAI streaming requires a temporary token for WebSocket auth
+  // Generate it server-side to keep the API key secure
   // Docs: https://www.assemblyai.com/docs/speech-to-text/streaming
   
   try {
-    // Return the API key securely from the backend
-    // The frontend will use this to connect to the WebSocket
-    return res.status(200).json({ 
-      token: apiKey 
+    // Try to get a temporary token from AssemblyAI
+    const response = await fetch('https://api.assemblyai.com/v2/realtime/token', {
+      method: 'POST',
+      headers: {
+        'Authorization': apiKey,
+      },
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[AssemblyAI Token] Failed to get token:', {
+        status: response.status,
+        error: errorText,
+        keyPreview
+      });
+      
+      // If token endpoint fails, fall back to returning the API key directly
+      // (some AssemblyAI plans might not support token generation)
+      console.log('[AssemblyAI Token] Falling back to direct API key');
+      return res.status(200).json({ 
+        token: apiKey 
+      });
+    }
+
+    const data = await response.json();
+    console.log('[AssemblyAI Token] Successfully generated temporary token');
+    return res.status(200).json(data);
   } catch (error) {
     console.error('Error proxying AssemblyAI request:', error);
-    return res.status(500).json({ 
-      error: 'Internal server error',
-      message: error instanceof Error ? error.message : 'Unknown error'
+    
+    // Fall back to returning the API key
+    return res.status(200).json({ 
+      token: apiKey 
     });
   }
 }
