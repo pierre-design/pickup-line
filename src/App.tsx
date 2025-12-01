@@ -183,43 +183,41 @@ function App() {
           Skip to main content
         </a>
 
-        {/* Section 1: Home / Call Control - Content-based height with peek on desktop */}
-        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe pb-20 md:pb-32">
-          <div className="flex flex-col items-center px-6 md:px-8 lg:px-8 pt-8 min-h-[85vh]">
+        {/* Section 1: Home / Call Control */}
+        <section className="bg-gradient-to-b from-[#04411F] to-[#01150A] pt-safe py-8 px-6 md:px-8 lg:px-8">
+          <div className="max-w-2xl mx-auto">
             {/* Header with Status Indicator */}
-            <div className="w-full max-w-2xl mb-4 flex-shrink-0">
-              <div className="flex items-center justify-between mb-4">
-                <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
-                  Pickup Lines
-                </h1>
-                
-                {/* Status Chip */}
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-3xl sm:text-4xl font-bold text-white text-left">
+                Pickup Lines
+              </h1>
+              
+              {/* Status Chip */}
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${
+                isServiceActive 
+                  ? 'border-medium-green bg-medium-green/10' 
+                  : 'border-pink bg-pink/10'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${
                   isServiceActive 
-                    ? 'border-medium-green bg-medium-green/10' 
-                    : 'border-pink bg-pink/10'
+                    ? 'bg-medium-green animate-pulse' 
+                    : 'bg-pink'
+                }`} />
+                <span className={`text-xs font-semibold ${
+                  isServiceActive ? 'text-medium-green' : 'text-pink'
                 }`}>
-                  <div className={`w-2 h-2 rounded-full ${
-                    isServiceActive 
-                      ? 'bg-medium-green animate-pulse' 
-                      : 'bg-pink'
-                  }`} />
-                  <span className={`text-xs font-semibold ${
-                    isServiceActive ? 'text-medium-green' : 'text-pink'
-                  }`}>
-                    {isServiceActive ? 'Active' : 'Disabled'}
-                  </span>
-                </div>
+                  {isServiceActive ? 'Active' : 'Disabled'}
+                </span>
               </div>
             </div>
 
             {/* Pickup Line Carousel */}
-            <div className="w-full max-w-2xl mb-4 flex-shrink-0">
+            <div className="mb-4">
               <PickupLineCarousel statistics={statistics} />
             </div>
 
             {/* Call Control Panel */}
-            <div className="w-full max-w-md mb-3 flex-shrink-0">
+            <div className="max-w-md mx-auto mb-3">
               <CallControlPanel
                 ref={callControlRef}
                 sessionManager={sessionManager}
@@ -230,12 +228,12 @@ function App() {
             </div>
 
             {/* Description below button */}
-            <p className="text-light-green text-center text-sm sm:text-base mb-4 flex-shrink-0">
+            <p className="text-light-green text-center text-sm sm:text-base mb-8">
               Improve how you start your calls
             </p>
 
             {/* Need Help Button */}
-            <div className="w-full max-w-2xl mt-8 mb-4 flex-shrink-0 flex justify-center">
+            <div className="flex justify-center mb-8">
               <button
                 onClick={handleShowQuickGuide}
                 className="px-4 py-2 border-2 border-light-green text-light-green rounded-lg text-sm font-semibold hover:bg-light-green/10 transition-colors"
@@ -247,16 +245,13 @@ function App() {
           </div>
         </section>
 
-        {/* Section 2: Performance Dashboard - Content-based height */}
-        <section className="min-h-screen bg-[#01150A] pb-20 md:pb-8">
-          {/* Header */}
-          <div className="pt-12 md:pt-16 pb-6 px-6 md:px-8 lg:px-8">
-            <div className="w-full max-w-4xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6">
-                Your best pickup
-              </h2>
-              <PerformanceDashboard statistics={statistics} />
-            </div>
+        {/* Section 2: Performance Dashboard */}
+        <section className="bg-[#01150A] py-12 px-6 md:px-8 lg:px-8 pb-20 md:pb-8">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-6">
+              Your best pickup
+            </h2>
+            <PerformanceDashboard statistics={statistics} />
           </div>
         </section>
 
