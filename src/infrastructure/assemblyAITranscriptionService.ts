@@ -57,12 +57,12 @@ export class AssemblyAITranscriptionService implements AudioTranscriptionService
       }
 
       const data = await response.json();
-      const token = data.token;
+      const apiKey = data.token; // This is actually the API key from our proxy
 
-      // Connect to WebSocket using universal-1 model
-      // Note: sample_rate must match your audio input (16000 is standard)
+      // Connect to WebSocket using the new universal streaming API
+      // Docs: https://www.assemblyai.com/docs/speech-to-text/streaming
       this.socket = new WebSocket(
-        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${token}`
+        `wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&api_key=${apiKey}`
       );
 
       this.setupWebSocket();
